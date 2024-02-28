@@ -13,9 +13,7 @@ import java.net.URL;
 public class SymbolToNameTranslator {
 	
 
-	//private constructor not not allow instantiation
 	private SymbolToNameTranslator() {}
-	
 	
 	/**
 	 * This method is a static method that takes the symbol of a company and will translate it to a full company name.
@@ -32,7 +30,7 @@ public class SymbolToNameTranslator {
 		String translateUrl = "https://stockanalysis.com/stocks/" + symbol + "/";
 		
 		//The company name that is eventually going to be updated and returned(hopefully)
-		String title = null;
+		String title = "";
 		
 		//Create URL object that allows us to access HTML content
 		URL url = new URL(translateUrl);
@@ -45,8 +43,10 @@ public class SymbolToNameTranslator {
 			if(inputLine.contains("title")){
 				for(int i = 82;i<inputLine.length();i++){
 					if(inputLine.charAt(i) != '('){
+						System.out.println(inputLine.charAt(i));
 						//keeps adding characters until company name is done
 						title = title+=inputLine.charAt(i);
+						
 					}else{
 						break;
 					}

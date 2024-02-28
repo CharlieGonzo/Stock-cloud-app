@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import stocks.Utilities.SymbolToNameTranslator;
 import stocks.models.Stock;
@@ -24,7 +25,7 @@ import stocks.models.Stock;
  * and then parses that data to allow access to specific date for a {@link Stock}. This class can also access the history of a stock from all the way back to 1970
  * @author Charles Gonzalez Jr
  */
-@Controller
+@RestController
 @RequestMapping("/stock")
 public class StockController{
 	
@@ -78,12 +79,23 @@ public class StockController{
 	        		
 	}
 	
-	 public long getCurrentTime(){
-	        Calendar cal = Calendar.getInstance();
-	        cal.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-	        Date currentDate = cal.getTime();
-	        return currentDate.getTime() / 1000;
-	 }
+	@GetMapping("/name/{symbol}")
+	public String getCompanyName(@PathVariable String symbol) {
+		return "";
+	}
+	
+	
+	
+	/**
+	 * this method gets current time and returns it as a long
+	 * @return the current time
+	 */
+	public long getCurrentTime(){
+	       Calendar cal = Calendar.getInstance();
+	       cal.set(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+	       Date currentDate = cal.getTime();
+	       return currentDate.getTime() / 1000;
+	}
 	 
 	
 	
