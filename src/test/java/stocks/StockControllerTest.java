@@ -28,7 +28,6 @@ public class StockControllerTest {
 	@Test
 	@WithMockUser
 	public void testApi() {
-		
 		/*
 		 * this test first checks if the end point returns a status code 200
 		 * then after that, it checks if the type of content is JSON. this should be true becuase this 
@@ -45,6 +44,8 @@ public class StockControllerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		
 	
 	}

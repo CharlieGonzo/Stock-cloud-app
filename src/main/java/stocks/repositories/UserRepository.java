@@ -1,5 +1,9 @@
 package stocks.repositories;
 
-public class UserRepository {
+import org.springframework.data.repository.CrudRepository;
+
+import stocks.models.User;
+
+public interface UserRepository extends CrudRepository<User,String>{
 
 }
