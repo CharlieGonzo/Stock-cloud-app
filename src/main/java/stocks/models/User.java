@@ -28,6 +28,8 @@ public class User implements UserDetails{
 	
 	private TreeSet<Stock> stocksHeld;
 	
+	private boolean activated;
+	
 	
 	
 	
