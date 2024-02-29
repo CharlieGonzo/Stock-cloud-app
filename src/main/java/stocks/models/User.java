@@ -29,6 +29,8 @@ public class User implements UserDetails{
 	private TreeSet<Stock> stocksHeld;
 	
 	
+	
+	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -39,13 +41,13 @@ public class User implements UserDetails{
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return null;
+		return username;
 	}
 
 	@Override
