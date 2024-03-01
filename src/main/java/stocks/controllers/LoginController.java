@@ -11,48 +11,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+import stocks.dto.JwtAuthenticationResponse;
 import stocks.models.LoginCredentials;
 import stocks.models.User;
 import stocks.repositories.UserRepository;
+import stocks.service.AuthenticationService;
 import stocks.service.UserService;
 
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
 	
 	@Autowired
-	UserService userService;
-	
-	 @Autowired
-	 private BCryptPasswordEncoder passwordEncoder;
+	private final AuthenticationService service;
 	
 	@PostMapping("/Register")
-	public ResponseEntity<String> Register(@RequestBody LoginCredentials register){
-		 // Hash the password
-        String hashedPassword = passwordEncoder.encode(register.getPassword());
-        
-     
-        
-        User user = new User();
-        user.setUsername(register.getUsername());
-        user.setPassword(hashedPassword);
-		
-		Optional<User> userr = userService.saveUser(user);
-		System.out.println(userr.isPresent());
-		if(userr.isPresent()) {
-			return ResponseEntity.ok("User registered!");
-		}
-		return ResponseEntity.badRequest().body("invalid info");
+	public JwtAuthenticationResponse Register(@RequestBody LoginCredentials register){
+        return service.signUp(register);
 	}
 	
-	/*
+	
 	@PostMapping("/Login")
-	public ResponseEntity<User> login(@RequestBody User user){
-		String username = user.getUsername();
-		String password = user.getPassword();
+	public JwtAuthenticationResponse login(@RequestBody LoginCredentials user){
+		System.out.println(user);
+		return service.signIn(user);
+		
 		
 
 	}
-	*/
+	
 	
 	
 	
