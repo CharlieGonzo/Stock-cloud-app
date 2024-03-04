@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
+import Home from "../src/components/Home.jsx";
 
 //allows us to set specific url routes to componenents in application
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
