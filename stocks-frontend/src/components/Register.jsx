@@ -8,7 +8,6 @@ const Register = () => {
 
   const signUp = async (e) => {
     e.preventDefault();
-    console.log("here");
 
     const payload = {
       username: username,
