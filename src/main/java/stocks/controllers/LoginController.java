@@ -30,7 +30,6 @@ public class LoginController {
 	
 	@PostMapping("/Register")
 	public JwtAuthenticationResponse Register(@RequestBody LoginCredentials register){
-		System.out.println("here");
         return service.signUp(register);
 	}
 	
