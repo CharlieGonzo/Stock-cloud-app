@@ -32,6 +32,7 @@ public class SymbolToNameTranslator {
 		//The company name that is eventually going to be updated and returned(hopefully)
 		String title = "";
 		
+		
 		//Create URL object that allows us to access HTML content
 		URL url = new URL(translateUrl);
 		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
