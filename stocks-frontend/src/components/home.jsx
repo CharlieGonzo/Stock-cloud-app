@@ -13,7 +13,29 @@ function Home() {
   const dispatch = useDispatch();
   
   
+  const getInfo = async (e) =>{
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token
+    }
 
+    fetch("/api/user-info", {
+      method: "GET",
+      headers: headers
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Response data:", data);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+  }
 
   
   const login = async (e) => {
@@ -62,10 +84,12 @@ function Home() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button onClick={login}>Sign In</button>
+      <button type="submit">Sign In</button>
       <p>don't have a account?</p>
       <button><Link to="/Register" >Register</Link></button>
+      <button type="button" onClick={getInfo}>show info</button>
     </form>
+   
   );
 }
 
