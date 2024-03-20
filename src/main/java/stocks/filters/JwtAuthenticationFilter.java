@@ -42,13 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		final String jwt;
 		final String username;
 
-		if(StringUtils.hasText(authHeader) == false ||  !StringUtils.startsWithIgnoreCase(authHeader, "Bearer ")) {
+		if(!StringUtils.hasText(authHeader) ||  !StringUtils.startsWithIgnoreCase(authHeader, "Bearer ")) {
 			System.out.println("here");
 			filterChain.doFilter(request, response);
 			return;
 		}
 		jwt = authHeader.substring(7);
-		log.debug(jwt.toString());
+		log.debug(jwt);
 		username = jwtService.extractUserName(jwt);
 		
 		if(StringUtils.hasLength(authHeader) && SecurityContextHolder.getContext().getAuthentication() == null) {

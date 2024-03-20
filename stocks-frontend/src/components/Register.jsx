@@ -1,11 +1,18 @@
 import { useState } from "react";
 import "../style/home.css";
-import { json } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import Home from "./Home";import { Navigate } from "react-router";
+import { setter } from "../tokenSlice";
 
 const Register = () => {
+  const token = useSelector((state) => state.token.value)
+  const dispatch = useDispatch();
+  console.log('token: ' + token);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const[getToken,setToken] = useState('');
 
+  
   const signUp = async (e) => {
     e.preventDefault();
 
@@ -21,19 +28,29 @@ const Register = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
+        if(json?.token){
+          dispatch(setter(json.token))
+        }
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  return (
+
+  if(token == ''){
+    return  (
+
     <div>
+
       <form onSubmit={signUp}>
+
         <div className="login">
+
           <h1>Register here</h1>
+
           <div className="inputs">
+
             <label htmlFor="username">Enter username</label>
             <input
               type="text"
@@ -42,6 +59,7 @@ const Register = () => {
               name="username"
               id="username"
             />
+
             <label htmlFor="password">Enter password</label>
             <input
               type="password"
@@ -50,12 +68,23 @@ const Register = () => {
               name="password"
               id="password"
             />
-          </div>
-          <button type="submit">Register</button>
-        </div>
-      </form>
-    </div>
-  );
-};
 
+          </div>
+          
+          <button type="submit">Register</button>
+
+        </div>
+
+      </form>
+
+  </div>
+    )
+
+
+  }else{
+
+    return <Navigate to="/"/>
+
+  }
+}
 export default Register;

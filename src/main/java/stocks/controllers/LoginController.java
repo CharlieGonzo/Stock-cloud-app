@@ -36,7 +36,7 @@ public class LoginController {
 	
 	@PostMapping("/Login")
 	public JwtAuthenticationResponse login(@RequestBody LoginCredentials user){
-		System.out.println(user);
+
 		return service.signIn(user);
 		
 		

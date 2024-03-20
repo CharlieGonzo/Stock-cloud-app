@@ -1,15 +1,21 @@
 import { useState } from "react";
 import "../style/home.css";
 import axios from "axios";
-import { UseSelector, useDispatch, useSelector } from "react-redux";
-import setter from "../tokenSlice.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {setter} from "../tokenSlice.jsx";
+import { Link} from "react-router-dom"
+
+
 function Home() {
   const token = useSelector((state) => state.token.value);
-  console.log(token);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  
+  
 
+
+  
   const login = async (e) => {
     e.preventDefault();
 
@@ -21,11 +27,13 @@ function Home() {
     fetch("/api/Login", {
       method: "POST",
       body: JSON.stringify(payload),
-      headers: { "content-type": "application/json" },
+      headers: { "Content-type": "application/json" }
     })
-      .then((response) => response.json())
-      .then((json) => {
+      .then(response => response.json())
+      .then(json => {
         console.log(json);
+        //if we recieve a token. Update it
+       
         if (json?.token) {
           dispatch(setter(json.token));
         }
@@ -55,6 +63,8 @@ function Home() {
         />
       </div>
       <button onClick={login}>Sign In</button>
+      <p>don't have a account?</p>
+      <button><Link to="/Register" >Register</Link></button>
     </form>
   );
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,12 +53,12 @@ public class AuthenticationService {
 	  public JwtAuthenticationResponse signIn(LoginCredentials request) {
 		  System.out.println(request.toString());
 	      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
-	      System.out.println(request.toString());
 	      var user = userRepository.findByUsername(request.getUsername())
 	              .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
 	      var jwt = jwtService.generateToken(user);
-	      System.out.println(jwt.toString());
+
 	      return JwtAuthenticationResponse.builder().token(jwt).build();
 	  }
+
   
 }
