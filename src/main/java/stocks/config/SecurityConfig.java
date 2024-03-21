@@ -76,7 +76,7 @@ public class SecurityConfig{
     		)
     		.authorizeHttpRequests(authorize -> authorize
     				.requestMatchers(HttpMethod.POST,"/api/Login","/api/Register").permitAll()
-    				.requestMatchers(HttpMethod.GET,"/test/**").permitAll()
+    				.requestMatchers(HttpMethod.GET,"/test/**","/stock/**").permitAll()
     				.anyRequest().authenticated()
     		)
     		.authenticationProvider(authenticationProvider())
