@@ -7,6 +7,7 @@ import Register from "../src/components/Register.jsx";
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store.jsx";
+import ProfilePage from "./components/ProfilePage.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="/ProfilePage" element={<ProfilePage />} />s
         </Routes>
       </BrowserRouter>
     </Provider>

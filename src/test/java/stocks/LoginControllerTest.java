@@ -56,7 +56,7 @@ public class LoginControllerTest {
         String userJson = "{\"username\":\"testUser\", \"password\":\"testPassword\"}";
 
         // Perform POST request to /Login endpoint with JSON payload
-        mock.perform(MockMvcRequestBuilders.post("/Register")
+        mock.perform(MockMvcRequestBuilders.post("/api/Register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -64,5 +64,7 @@ public class LoginControllerTest {
  
         
 	}
+	
+	
 
 }

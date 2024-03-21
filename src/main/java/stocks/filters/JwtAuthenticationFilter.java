@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		if(StringUtils.hasLength(authHeader) && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = userService.userDetailsService().loadUserByUsername(username);
 			if(jwtService.isTokenValid(jwt, userDetails)) {
-				System.out.println("here//");
+				
 				System.out.println(jwtService.isTokenValid(jwt, userDetails));
 				log.debug("user : ", userDetails);
 				SecurityContext context = SecurityContextHolder.createEmptyContext();

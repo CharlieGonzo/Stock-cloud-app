@@ -34,8 +34,12 @@ public class User implements UserDetails{
 	
 	private String username;
 	
+	@Builder.Default
+	private double totalMoney = 1000;
+	
 	private String password;
 	
+	@Builder.Default
 	private TreeSet<Stock> stocksHeld = new TreeSet<>();
 	
 	LocalDate createdAt;
@@ -47,6 +51,15 @@ public class User implements UserDetails{
 		// TODO Auto-generated method stub
 		return Arrays.asList(new SimpleGrantedAuthority(role.name()));
 	}
+	
+	public double getTotalInvested() {
+		double invest = 0;
+		for(Stock s:stocksHeld) {
+			invest += s.getPrice();
+		}
+		return invest;
+	}
+	
 
 	@Override
 	public boolean isAccountNonExpired() {

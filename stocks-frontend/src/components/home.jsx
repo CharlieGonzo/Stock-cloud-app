@@ -1,43 +1,41 @@
 import { useState } from "react";
 import "../style/home.css";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {setter} from "../tokenSlice.jsx";
-import { Link} from "react-router-dom"
-
+import { setter } from "../tokenSlice.jsx";
+import { Link, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Home() {
   const token = useSelector((state) => state.token.value);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  
-  
-  const getInfo = async (e) =>{
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
-    }
 
-    fetch("/api/user-info", {
-      method: "GET",
-      headers: headers
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log("Response data:", data);
-    })
-    .catch(error => {
-      console.error("Error:", error);
-    });
+  function setSessionExpiration(expirationTimeInMinutes) {
+    const currentTime = Date.now();
+    const expirationTime = currentTime + expirationTimeInMinutes * 60 * 1000; // Convert minutes to milliseconds
+    localStorage.setItem("sessionExpiration", expirationTime.toString());
   }
 
-  
+  console.log(localStorage.getItem("token"));
+  const sessionExpiration = localStorage.getItem("sessionExpiration");
+  if (token != "" || Date.now() >= parseInt(sessionExpiration)) {
+    return <Navigate to="/ProfilePage" />;
+  }
+
+  if (localStorage.getItem("token") != null) {
+    if (localStorage.getItem("sessionExpiration") != null) {
+      if (Date.now >= parseInt(localStorage.getItem("sessionExpiration"))) {
+        localStorage.setItem("token", null);
+      }
+    }
+    dispatch(setter(localStorage.getItem("token")));
+  }
+
+  if (localStorage.getItem("token") != null) {
+    return <Navigate to="/ProfilePage" />;
+  }
+
   const login = async (e) => {
     e.preventDefault();
 
@@ -49,16 +47,19 @@ function Home() {
     fetch("/api/Login", {
       method: "POST",
       body: JSON.stringify(payload),
-      headers: { "Content-type": "application/json" }
+      headers: { "Content-type": "application/json" },
     })
-      .then(response => response.json())
-      .then(json => {
+      .then((response) => response.json())
+      .then((json) => {
         console.log(json);
         //if we recieve a token. Update it
-       
+
         if (json?.token) {
           dispatch(setter(json.token));
         }
+        localStorage.setItem("token", json.token);
+        setSessionExpiration(60);
+        return <Navigate to="/ProfilePage" />;
       })
       .catch((err) => {
         console.error(err);
@@ -86,10 +87,10 @@ function Home() {
       </div>
       <button type="submit">Sign In</button>
       <p>don't have a account?</p>
-      <button><Link to="/Register" >Register</Link></button>
-      <button type="button" onClick={getInfo}>show info</button>
+      <button>
+        <Link to="/Register">Register</Link>
+      </button>
     </form>
-   
   );
 }
 

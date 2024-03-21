@@ -16,6 +16,7 @@ import stocks.dto.JwtAuthenticationResponse;
 import stocks.models.LoginCredentials;
 import stocks.models.Role;
 import stocks.models.User;
+import stocks.models.UserInfo;
 import stocks.repositories.UserRepository;
 import stocks.service.AuthenticationService;
 import stocks.service.JwtService;
@@ -38,8 +39,16 @@ public class LoginController {
 	private final UserService userService;
 	
 	@PostMapping("/Register")
-	public JwtAuthenticationResponse Register(@RequestBody LoginCredentials register){
-        return service.signUp(register);
+	public ResponseEntity<JwtAuthenticationResponse> Register(@RequestBody LoginCredentials register){
+		
+		//if username is taken, return error code 409
+		Optional<User> user = userService.findUserByUsername(register.getUsername());
+		if(user.isPresent()) {
+			return ResponseEntity.status(409).build();
+		}
+		
+		
+        return ResponseEntity.ok(service.signUp(register));
 	}
 	
 	
@@ -50,18 +59,26 @@ public class LoginController {
 
 	@GetMapping("/user-info")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<User> getUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
+	public ResponseEntity<UserInfo> getUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
 		// Extract the JWT token from the Authorization header
 		String jwtToken = authorizationHeader.substring(7); // Assuming Bearer token format
 
 		// Extract the username from the JWT token
 		String username = jService.extractUserName(jwtToken);
-		System.out.println((username));
-
-		// Fetch the user information from the database
+		
+		//create Optional object that finds if user is available
 		Optional<User> user = userService.findUserByUsername(username);
-		return user.map(value -> ResponseEntity.ok().body(value))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		
+		//if user is present, returns only info that front end needs. Otherwise, send badRequest()
+		if(user.isPresent()) {
+			//only send back what we need
+			UserInfo userInfo = new UserInfo(user.get().getUsername(),user.get().getStocksHeld(),user.get().getTotalMoney(),user.get().getTotalInvested());
+			return ResponseEntity.ok(userInfo);
+		}else {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		
 	}
 
 
