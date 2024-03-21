@@ -10,23 +10,28 @@ function ProfilePage() {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
 
-  console.log(localStorage.getItem("token"));
-  console.log(localStorage.getItem("sessionExpiration"));
-  if (localStorage.getItem("token") == null) {
-    return <Navigate to="/" />;
-  }
-
-  if (localStorage.getItem("sessionExpiration") != null) {
-    if (Date.now >= parseInt(localStorage.getItem("sessionExpiration"))) {
-      return <Navigate to="/" />;
-    }
-  }
-
   useEffect(() => {
-    dispatch(setter(localStorage.getItem("token")));
-    s = localStorage.getItem("token");
+    if (token == null) {
+      console.log(localStorage.getItem("token"));
+      console.log(localStorage.getItem("sessionExpiration"));
+      if (localStorage.getItem("token") == null) {
+        window.location.href = "/"; // Redirect using window.location
+      }
+      if (localStorage.getItem("sessionExpiration") != null) {
+        if (Date.now >= parseInt(localStorage.getItem("sessionExpiration"))) {
+          logout();
+        }
+      }
+      dispatch(setter(localStorage.getItem("token")));
+    }
+    if (token != "") {
+      s = token;
+    } else {
+      s = localStorage.getItem("token");
+    }
     getInfo();
   }, []);
+
   const getInfo = async () => {
     console.log(s);
     const headers = {
@@ -53,13 +58,20 @@ function ProfilePage() {
       });
   };
 
+  function logout() {
+    dispatch(setter(""));
+    localStorage.removeItem("token");
+    localStorage.removeItem("sessionExpiration");
+    window.location.href = "/"; // Redirect using window.location
+  }
+
   return (
     <div className="login">
       <h1>Hi {user && user.username}</h1>
       <h3>stocks {user && user.stocks}</h3>
       <h3>total invested: {user && user.totalInvested}</h3>
       <h3>total money: {user && user.totalMoney}</h3>
-      <button></button>
+      <button onClick={logout}>logout</button>
     </div>
   );
 }
