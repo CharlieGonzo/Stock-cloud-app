@@ -11,7 +11,7 @@ function ProfilePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (token == null) {
+    if (token == '') {
       console.log(localStorage.getItem("token"));
       console.log(localStorage.getItem("sessionExpiration"));
       if (localStorage.getItem("token") == null) {
@@ -65,12 +65,17 @@ function ProfilePage() {
     window.location.href = "/"; // Redirect using window.location
   }
 
+  function goToBuyPage() {
+    window.location.href = "/BuyPage"; // Redirect using window.location
+  }
+
   return (
     <div className="login">
       <h1>Hi {user && user.username}</h1>
       <h3>stocks {user && user.stocks}</h3>
       <h3>total invested: {user && user.totalInvested}</h3>
       <h3>total money: {user && user.totalMoney}</h3>
+      <button onClick={goToBuyPage}>Buy Stock</button>
       <button onClick={logout}>logout</button>
     </div>
   );
