@@ -11,33 +11,51 @@ function Home() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+    login();
+  })
+
   function setSessionExpiration(expirationTimeInMinutes) {
     const currentTime = Date.now();
     const expirationTime = currentTime + expirationTimeInMinutes * 60 * 1000; // Convert minutes to milliseconds
     localStorage.setItem("sessionExpiration", expirationTime.toString());
   }
 
-  console.log(localStorage.getItem("token"));
-  const sessionExpiration = localStorage.getItem("sessionExpiration");
-  if (token != "" || Date.now() >= parseInt(sessionExpiration)) {
-    return <Navigate to="/ProfilePage" />;
-  }
-
-  if (localStorage.getItem("token") != null) {
-    if (localStorage.getItem("sessionExpiration") != null) {
-      if (Date.now >= parseInt(localStorage.getItem("sessionExpiration"))) {
-        localStorage.setItem("token", null);
-      }
-    }
-    dispatch(setter(localStorage.getItem("token")));
-  }
-
-  if (localStorage.getItem("token") != null) {
-    return <Navigate to="/ProfilePage" />;
-  }
-
-  const login = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    const payload = {
+      username: username,
+      password: password,
+    };
+    //post with fetch api
+    fetch("/api/Login", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        //if we recieve a token. Update it
+
+        if (json?.token) {
+          dispatch(setter(json.token));
+        }
+        localStorage.setItem("token", json.token);
+        setSessionExpiration(60);
+        window.location.href = "/ProfilePage"; 
+      })
+      .catch((err) => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('sessionExpiration')
+        console.error(err);
+      });
+  };
+
+ 
+
+
+  const login = async () => {
 
     const payload = {
       username: username,
@@ -59,15 +77,19 @@ function Home() {
         }
         localStorage.setItem("token", json.token);
         setSessionExpiration(60);
-        return <Navigate to="/ProfilePage" />;
+        window.location.href = "/ProfilePage"; 
       })
       .catch((err) => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('sessionExpiration')
         console.error(err);
       });
   };
 
+ 
+
   return (
-    <form className="login" onSubmit={login}>
+    <form className="login" onSubmit={(e)=>submit(e)}>
       <h1>please login in</h1>
       <div className="inputs">
         <label htmlFor="username">Username:</label>

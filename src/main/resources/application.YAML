@@ -6,6 +6,6 @@ spring:
 
   
 token:
-  expirationms: 36000000
+  expirationms: 3600000
   secret:
     key: "daef29f56ce437986fd39140c358bf9f001f04683d59c1ae667a2a776d874d8d"

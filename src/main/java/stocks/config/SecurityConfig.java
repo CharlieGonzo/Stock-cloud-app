@@ -76,7 +76,7 @@ public class SecurityConfig{
     		)
     		.authorizeHttpRequests(authorize -> authorize
     				.requestMatchers(HttpMethod.POST,"/api/Login","/api/Register").permitAll()
-    				.requestMatchers(HttpMethod.GET,"/test/**","/stock/**").permitAll()
+    				.requestMatchers(HttpMethod.GET,"/test/**").permitAll()
     				.anyRequest().authenticated()
     		)
     		.authenticationProvider(authenticationProvider())
@@ -84,11 +84,12 @@ public class SecurityConfig{
 
 
 
-    	
+
     	return http.build();
     		
     }
-    
+
+
     
     
    

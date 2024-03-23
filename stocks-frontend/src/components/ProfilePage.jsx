@@ -9,34 +9,16 @@ function ProfilePage() {
   let s = "";
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-
   useEffect(() => {
-    if (token == '') {
-      console.log(localStorage.getItem("token"));
-      console.log(localStorage.getItem("sessionExpiration"));
-      if (localStorage.getItem("token") == null) {
-        window.location.href = "/"; // Redirect using window.location
-      }
-      if (localStorage.getItem("sessionExpiration") != null) {
-        if (Date.now >= parseInt(localStorage.getItem("sessionExpiration"))) {
-          logout();
-        }
-      }
-      dispatch(setter(localStorage.getItem("token")));
-    }
-    if (token != "") {
-      s = token;
-    } else {
-      s = localStorage.getItem("token");
-    }
     getInfo();
-  }, []);
+  },[])
+    
 
   const getInfo = async () => {
     console.log(s);
     const headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + s,
+      Authorization: "Bearer " + localStorage.getItem('token'),
     };
 
     fetch("/api/user-info", {
@@ -54,6 +36,7 @@ function ProfilePage() {
         setUser(data);
       })
       .catch((error) => {
+        logout();
         console.error("Error:", error);
       });
   };
@@ -68,6 +51,8 @@ function ProfilePage() {
   function goToBuyPage() {
     window.location.href = "/BuyPage"; // Redirect using window.location
   }
+
+ 
 
   return (
     <div className="login">
