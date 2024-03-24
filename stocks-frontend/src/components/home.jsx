@@ -76,6 +76,7 @@ function Home() {
           dispatch(setter(json.token));
         }
         localStorage.setItem("token", json.token);
+        console.log(json.token);
         setSessionExpiration(60);
         window.location.href = "/ProfilePage"; 
       })

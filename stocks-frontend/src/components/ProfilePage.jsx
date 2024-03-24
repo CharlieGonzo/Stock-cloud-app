@@ -13,7 +13,6 @@ function ProfilePage() {
     getInfo();
   },[])
     
-
   const getInfo = async () => {
     console.log(s);
     const headers = {

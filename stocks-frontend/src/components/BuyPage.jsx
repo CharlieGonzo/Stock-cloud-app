@@ -9,48 +9,42 @@ function BuyPage(){
     const dispatch = useDispatch();
     const [user, setUser] = useState(null);
     const[symbol,setSymbol] = useState('');
-    const[stock,setStock] = useState('');
+    const[stockPrice,setStockPrice] = useState('');
+    const[companyName,setCompanyName] = useState('');
+    const[currentSymbol,setCurrentSymbol] = useState('');
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
 
     useEffect(() => {
       getInfo();
     },[])
 
-    
-
-      const getInfo = async () => {
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        };
-    
-        fetch("/api/user-info", {
-          method: "GET",
-          headers: headers,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            setUser(data);
-          })
-          .catch((error) => {
-            
-            console.error("Error:", error);
-           
-          });
+    const getInfo = async () => {
+      fetch("/api/user-info", {
+        method: "GET",
+        headers: headers,
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+          return response.json();
+      }).then((data) => {
+          console.log(data);
+          setUser(data);
+      }).catch((error) => {
+          console.error("Error:", error); 
+          localStorage.removeItem('token');
+          localStorage.removeItem('sessionExpiration');
+          window.location.href = "/";
+      });
       };
 
     
 
       const buy = async ()=>{
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem('token'),
-        };
         let s = "/stock/" + symbol
         fetch(s, {
           method: "GET",
@@ -64,13 +58,17 @@ function BuyPage(){
           })
           .then((data) => {
             console.log(data);
-            setStock(data);
+            let a = data.split(',')
+            console.log(a);
+            if(a[8] != null){
+            setCompanyName(a[7]+a[8])
+            }else{
+              setCompanyName(a[7])
+            }
+            setStockPrice(a[4]);
+            setCurrentSymbol(symbol);
           })
           .catch((error) => {
-            dispatch(setter(""));
-            localStorage.removeItem("token");
-            localStorage.removeItem("sessionExpiration");
-            window.location.href = "/"; // Redirect using window.location
             console.error("Error:", error);
           });
       }
@@ -86,8 +84,11 @@ function BuyPage(){
                 <h3>Total money available: {user && user.totalMoney}</h3>
                 <h3>Total money invested: {user && user.totalInvested}</h3>
                 <button onClick={buy}>search</button>
-                {(stock !== '' ) && <div>
-                  <h3>{stock}</h3>
+                <button>back to profile</button>
+                {(stockPrice !== '' ) && <div>
+                  <h2>Stock Price {stockPrice}</h2>
+                  <h2>Company Name: {companyName}</h2>
+                  <h2>Company Symbol: {currentSymbol.toUpperCase()}</h2>
                   <button>buy</button>
                   <button>sell</button>
                   </div>}

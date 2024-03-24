@@ -47,11 +47,11 @@ public class UserService {
 	}
 	
 	public boolean deleteById(String id) {
-		if(users.findById(id) == null) {
+		Optional<User> user = users.findById(id);
+		if(user.isEmpty()) {
 			return false;
 		}
 		users.deleteById(id);
-		
 		return true;
 	}
 	
