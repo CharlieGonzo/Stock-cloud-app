@@ -40,14 +40,12 @@ public class LoginController {
 	
 	@PostMapping("/Register")
 	public ResponseEntity<JwtAuthenticationResponse> Register(@RequestBody LoginCredentials register){
-		
 		//if username is taken, return error code 409
 		Optional<User> user = userService.findUserByUsername(register.getUsername());
 		if(user.isPresent()) {
 			return ResponseEntity.status(409).build();
 		}
-		
-		
+
         return ResponseEntity.ok(service.signUp(register));
 	}
 	

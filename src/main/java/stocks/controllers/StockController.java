@@ -68,7 +68,6 @@ public class StockController{
 	    String stockInfo;
 	    while ((stockInfo = in.readLine()) != null)
 	     		if (!stockInfo.contains("Date")) {
-
 	     			return ResponseEntity.ok(stockInfo + ", " +  SymbolToNameTranslator.TranslateToCompanyName(stockSymbol));
 				 }
 

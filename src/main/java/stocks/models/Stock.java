@@ -21,6 +21,10 @@ public class Stock {
 	public void updatePrice() throws IOException {
 		price  = stockController.getPrice(this.symbol);
 	}
+
+	public double totalAmount(){
+		return price * counter;
+	}
 	
 
 }

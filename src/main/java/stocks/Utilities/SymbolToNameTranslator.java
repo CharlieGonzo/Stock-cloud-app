@@ -44,7 +44,6 @@ public class SymbolToNameTranslator {
 			if(inputLine.contains("title")){
 				for(int i = 82;i<inputLine.length();i++){
 					if(inputLine.charAt(i) != '('){
-						System.out.println(inputLine.charAt(i));
 						//keeps adding characters until company name is done
 						title = title+=inputLine.charAt(i);
 						
