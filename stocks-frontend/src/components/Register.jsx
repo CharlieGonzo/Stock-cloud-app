@@ -6,11 +6,10 @@ import { Navigate } from "react-router";
 import { setter } from "../tokenSlice";
 
 const Register = () => {
-  const token = useSelector((state) => state.token.value);
   const dispatch = useDispatch();
-  console.log("token: " + token);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const signUp = async (e) => {
     e.preventDefault();
@@ -28,7 +27,9 @@ const Register = () => {
       .then((response) => response.json())
       .then((json) => {
         if (json?.token) {
+          localStorage.setItem("token", json.token);
           dispatch(setter(json.token));
+          window.location.href = "/ProfilePage";
         }
       })
       .catch((err) => {
@@ -36,7 +37,7 @@ const Register = () => {
       });
   };
 
-  if (token == "") {
+  if (localStorage.getItem("token") == null) {
     return (
       <div>
         <form onSubmit={signUp}>
@@ -69,7 +70,7 @@ const Register = () => {
       </div>
     );
   } else {
-    return <Navigate to="/" />;
+    return <Navigate to="/ProfilePage" />;
   }
 };
 export default Register;

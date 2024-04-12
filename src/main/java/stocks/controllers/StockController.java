@@ -74,6 +74,8 @@ public class StockController{
 	   return ResponseEntity.badRequest().build();
 	        		
 	}
+	
+	
 
 
 	public double getPrice(String symbol) throws IOException {
@@ -82,10 +84,6 @@ public class StockController{
 	}
 
 
-	@GetMapping("/name/{symbol}")
-	public String getCompanyName(@PathVariable String symbol) {
-		return "";
-	}
 	
 	
 	

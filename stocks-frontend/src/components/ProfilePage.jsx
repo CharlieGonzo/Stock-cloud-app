@@ -5,19 +5,18 @@ import { useEffect, useState } from "react";
 import "../style/home.css";
 
 function ProfilePage() {
-  const token = useSelector((state) => state.token.value);
   let s = "";
-  const dispatch = useDispatch();
+
   const [user, setUser] = useState(null);
   useEffect(() => {
     getInfo();
-  },[])
-    
+  }, []);
+
   const getInfo = async () => {
     console.log(s);
     const headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem('token'),
+      Authorization: "Bearer " + localStorage.getItem("token"),
     };
 
     fetch("/api/user-info", {
@@ -35,13 +34,12 @@ function ProfilePage() {
         setUser(data);
       })
       .catch((error) => {
-        logout();
         console.error("Error:", error);
+        logout();
       });
   };
 
   function logout() {
-    dispatch(setter(""));
     localStorage.removeItem("token");
     localStorage.removeItem("sessionExpiration");
     window.location.href = "/"; // Redirect using window.location
@@ -50,8 +48,6 @@ function ProfilePage() {
   function goToBuyPage() {
     window.location.href = "/BuyPage"; // Redirect using window.location
   }
-
- 
 
   return (
     <div className="login">

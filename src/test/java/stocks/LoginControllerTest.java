@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import stocks.controllers.LoginController;
+import stocks.controllers.UserController;
 import stocks.models.User;
 import stocks.repositories.UserRepository;
 import stocks.service.UserService;

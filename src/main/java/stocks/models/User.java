@@ -27,7 +27,7 @@ import lombok.ToString;
 @Data
 public class User implements UserDetails{
 
-	
+
 
 	@Id
 	private String id;
@@ -37,6 +37,7 @@ public class User implements UserDetails{
 	@Builder.Default
 	private double totalMoney = 1000;
 	
+
 	private String password;
 	
 	@Builder.Default
