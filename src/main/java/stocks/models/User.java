@@ -1,5 +1,6 @@
 package stocks.models;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public class User implements UserDetails{
 	
 	private String username;
 	
-	@Builder.Default
+
 	private double totalMoney = 1000;
 	
 
@@ -53,12 +54,25 @@ public class User implements UserDetails{
 		return Arrays.asList(new SimpleGrantedAuthority(role.name()));
 	}
 	
-	public double getTotalInvested() {
+	public double getTotalInvested() throws IOException {
 		double invest = 0;
 		for(Stock s:stocksHeld) {
-			invest += s.getPrice();
+			s.updatePrice();
+
+			invest += s.getPrice() * s.getCounter();
 		}
+
 		return invest;
+	}
+
+	public void updateTotal() throws IOException {
+		double invest = getTotalInvested();
+		double toSpend = totalMoney - getTotalInvested();
+		totalMoney = invest + toSpend;
+	}
+
+	public double getTotal() throws IOException {
+		return totalMoney;
 	}
 	
 

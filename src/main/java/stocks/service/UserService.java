@@ -39,7 +39,7 @@ public class UserService {
 	}
 	
 	public User saveUser(User user) {
-		System.out.println(user);
+
 		if(user.getId() == null) {
 			user.setCreatedAt(LocalDate.now());
 		} else {

@@ -6,7 +6,7 @@ import "../style/home.css";
 
 function ProfilePage() {
   let s = "";
-
+  const [stockList,setStockList] = useState([]);
   const [user, setUser] = useState(null);
   useEffect(() => {
     getInfo();
@@ -32,10 +32,11 @@ function ProfilePage() {
       .then((data) => {
         console.log(data);
         setUser(data);
+        setStockList(data.stocks);
       })
       .catch((error) => {
         console.error("Error:", error);
-        logout();
+        //logout();
       });
   };
 
@@ -52,9 +53,17 @@ function ProfilePage() {
   return (
     <div className="login">
       <h1>Hi {user && user.username}</h1>
-      <h3>stocks {user && user.stocks}</h3>
+      <h3>stocks {stockList && stockList.map((stock) => {
+        return (
+          <ul key={stock.symbol}>
+            <li>{stock.symbol} price:{stock.price} count:{stock.counter}</li>
+          
+          </ul>
+        )
+      })}</h3>
       <h3>total invested: {user && user.totalInvested}</h3>
       <h3>total money: {user && user.totalMoney}</h3>
+      <h3>total to Spend: {user && user.totalMoney - user.totalInvested}</h3>
       <button onClick={goToBuyPage}>Buy Stock</button>
       <button onClick={logout}>logout</button>
     </div>

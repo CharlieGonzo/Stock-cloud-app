@@ -23,14 +23,18 @@ function BuyPage() {
 
   useEffect(() => {
     getInfo();
+  },[])
+
+  useEffect(() => {
+   
     const intervalId = setInterval(() => {
+      getInfo();
       if (currentSymbol != "") {
-        getInfo();
         search();
       }
     }, 5000); // 5000 milliseconds = 5 seconds
     return () => clearInterval(intervalId);
-  }, []);
+  },[]);
 
   const getInfo = async () => {
     fetch("/api/user-info", {
@@ -46,20 +50,22 @@ function BuyPage() {
       .then((data) => {
         console.log(data);
         setUser(data);
-        if(user.stocks != null) setStocksList(user.stocks);
+        setStocksList(data.stocks);
       })
       .catch((error) => {
         console.error("Error:", error);
-        /*
+        
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
         window.location.href = "/";
-        */
+        
+        
       });
   };
 
   const buy = async () => {
     let s = "/api/buy/" + currentSymbol + "/" + buyAmount;
+    console.log("here");
     fetch(s, {
       method: "Get",
       headers: headers,
@@ -72,7 +78,7 @@ function BuyPage() {
         return response.json;
       })
       .then((data) => {
-        getInfo();
+        
       })
       .catch((e) => {
         console.error("Error:", e);
@@ -94,7 +100,7 @@ function BuyPage() {
         return response.text();
       })
       .then((data) => {
-        console.log(user.stocks);
+       
         let a = data.split(",");
         console.log(a);
         if (a[8] != null) {
@@ -136,17 +142,18 @@ function BuyPage() {
         type="text"
         onChange={(e) => setSymbol(e.target.value)}
       />
-      <h3>Total money available: {user && user.totalMoney}</h3>
+      <h3>Total money available to spend: {user && user.totalMoney}</h3>
       <h3>Total money invested: {user && user.totalInvested}</h3>
+      <h3>Total money overall: {user && user.totalInvested + user.totalMoney}</h3>
       <h3>Stocks {stocksList && stocksList.map((stock) => {
         return (
         <ul key={stock.symbol}>
-          <li>{stock.symbol}</li>
+          <li>{stock.symbol} count: {stock.counter} Price: {stock.price} Total : {stock.price*stock.counter}</li>
         </ul>
         )
       })}</h3>
       <button onClick={() => search()}>search</button>
-      <button>back to profile</button>
+      <button onClick={() => ProfilePage()}>back to profile</button>
       {error && (
         <p>error has occured. Check info you entered to see if it is correct</p>
       )}
@@ -169,7 +176,7 @@ function BuyPage() {
                 type="number"
                 onChange={(e) => setSellAmount(e.target.value)}
               />
-              <button onClick={() => sell()}>sell</button>
+              <button onClick={sell}>sell</button>
             </div>
             <div></div>
           </div>

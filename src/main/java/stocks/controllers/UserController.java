@@ -65,7 +65,7 @@ public class UserController {
 	public ResponseEntity<String> buy(@PathVariable String stockSymbol,@PathVariable String amountBought,@RequestHeader("Authorization") String authHead ) throws IOException{
 		// Extract the JWT token from the Authorization header
 		User user = getUser(authHead);
-		System.out.println("here");
+
 		if(user == null) return ResponseEntity.badRequest().build();
 		Stock stock = null;
 		boolean contains = false;
@@ -76,18 +76,22 @@ public class UserController {
 				break;
 			}
 		}
+
 		if(!contains) {
 			stock = new Stock();
 			stock.setSymbol(stockSymbol);
-			stock.setCounter(Integer.valueOf(amountBought));
-			stock.setPrice(stockController.getPrice(stockSymbol));
 			user.getStocksHeld().add(stock);
 		}
-		
-		stock.buy(Integer.valueOf(amountBought));
-		
+		double total = user.getTotal();
+		stock.setPrice(stockController.getPrice(stockSymbol));
+		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
+
+			stock.buy(Integer.valueOf(amountBought));
+		}else{
+			return ResponseEntity.ok("not enough money");
+		}
 		userService.saveUser(user);
-		System.out.println(user.getStocksHeld().size());
+
 		
 		
 		return ResponseEntity.ok(null);
@@ -116,14 +120,15 @@ public class UserController {
 
 	@GetMapping("/user-info")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<UserInfo> getUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
+	public ResponseEntity<UserInfo> getUserInfo(@RequestHeader("Authorization") String authorizationHeader) throws IOException {
 		User info = getUser(authorizationHeader);
 		
 		if(info == null) return ResponseEntity.badRequest().build();
 
 		//only send back what we need
+		info.updateTotal();
 		userService.saveUser(info);
-		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld(),info.getTotalMoney(),info.getTotalInvested()));
+		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld(),info.getTotal(),info.getTotalInvested()));
 		
 	}
 
