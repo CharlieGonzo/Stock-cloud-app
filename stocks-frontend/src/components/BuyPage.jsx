@@ -25,6 +25,8 @@ function BuyPage() {
     getInfo();
   },[])
 
+ 
+
   useEffect(() => {
    
     const intervalId = setInterval(() => {
