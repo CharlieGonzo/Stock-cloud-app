@@ -65,7 +65,7 @@ public class UserController {
 	public ResponseEntity<String> buy(@PathVariable String stockSymbol,@PathVariable String amountBought,@RequestHeader("Authorization") String authHead ) throws IOException{
 		// Extract the JWT token from the Authorization header
 		User user = getUser(authHead);
-		
+		System.out.println("here");
 		if(user == null) return ResponseEntity.badRequest().build();
 		Stock stock = null;
 		boolean contains = false;
@@ -76,9 +76,6 @@ public class UserController {
 				break;
 			}
 		}
-		
-		
-		
 		if(!contains) {
 			stock = new Stock();
 			stock.setSymbol(stockSymbol);
@@ -90,7 +87,7 @@ public class UserController {
 		stock.buy(Integer.valueOf(amountBought));
 		
 		userService.saveUser(user);
-		
+		System.out.println(user.getStocksHeld().size());
 		
 		
 		return ResponseEntity.ok(null);
@@ -102,22 +99,18 @@ public class UserController {
 	
 	public User getUser(String header){
 		// Extract the JWT token from the Authorization header
-				String jwtToken = header.substring(7); // Assuming Bearer token format
+		String jwtToken = header.substring(7); // Assuming Bearer token format
 
-				// Extract the username from the JWT token
-				String username = jService.extractUserName(jwtToken);
+		// Extract the username from the JWT token
+		String username = jService.extractUserName(jwtToken);
 				
-				//create Optional object that finds if user is available
-				Optional<User> user = userService.findUserByUsername(username);
+		//create Optional object that finds if user is available
+		Optional<User> user = userService.findUserByUsername(username);
 				
-				//if user is present, returns only info that front end needs. Otherwise, send badRequest()
-				if(user.isPresent()) {
-				
-					return user.get();	
-				}
-				
-				return null;
-	}
+		//if user is present, returns only info that front end needs. Otherwise, send badRequest()
+		return user.orElse(null);
+
+    }
 	
 	
 
@@ -127,7 +120,7 @@ public class UserController {
 		User info = getUser(authorizationHeader);
 		
 		if(info == null) return ResponseEntity.badRequest().build();
-		
+
 		//only send back what we need
 		userService.saveUser(info);
 		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld(),info.getTotalMoney(),info.getTotalInvested()));

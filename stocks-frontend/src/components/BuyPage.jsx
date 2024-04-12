@@ -7,6 +7,7 @@ import "../style/home.css";
 function BuyPage() {
   const [user, setUser] = useState(null);
   const [symbol, setSymbol] = useState("");
+  const [stocksList,setStocksList] = useState([]);
   const [stockPrice, setStockPrice] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [currentSymbol, setCurrentSymbol] = useState("");
@@ -24,7 +25,7 @@ function BuyPage() {
     getInfo();
     const intervalId = setInterval(() => {
       if (currentSymbol != "") {
-        getInfo;
+        getInfo();
         search();
       }
     }, 5000); // 5000 milliseconds = 5 seconds
@@ -43,19 +44,22 @@ function BuyPage() {
         return response.json();
       })
       .then((data) => {
-        console.log(user);
+        console.log(data);
         setUser(data);
+        if(user.stocks != null) setStocksList(user.stocks);
       })
       .catch((error) => {
         console.error("Error:", error);
+        /*
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
         window.location.href = "/";
+        */
       });
   };
 
   const buy = async () => {
-    let s = "/buy/" + currentSymbol + "/" + buyAmount;
+    let s = "/api/buy/" + currentSymbol + "/" + buyAmount;
     fetch(s, {
       method: "Get",
       headers: headers,
@@ -117,7 +121,7 @@ function BuyPage() {
   }
     
   
-  };
+  
 
   const ProfilePage = () => {
     window.location.href = "/ProfilePage";
@@ -134,7 +138,13 @@ function BuyPage() {
       />
       <h3>Total money available: {user && user.totalMoney}</h3>
       <h3>Total money invested: {user && user.totalInvested}</h3>
-      <h3>Stocks {user && listItems}</h3>
+      <h3>Stocks {stocksList && stocksList.map((stock) => {
+        return (
+        <ul key={stock.symbol}>
+          <li>{stock.symbol}</li>
+        </ul>
+        )
+      })}</h3>
       <button onClick={() => search()}>search</button>
       <button>back to profile</button>
       {error && (
@@ -152,7 +162,7 @@ function BuyPage() {
                 type="number"
                 onChange={(e) => setBuyAmount(e.target.value)}
               />
-              <button onClick={() => buy()}>buy</button>
+              <button onClick={buy}>buy</button>
             </div>
             <div>
               <input

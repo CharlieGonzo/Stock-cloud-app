@@ -42,6 +42,22 @@ public class UserService {
 		System.out.println(user);
 		if(user.getId() == null) {
 			user.setCreatedAt(LocalDate.now());
+		} else {
+			// Check if the user exists in the database
+			User existingUser = users.findById(user.getId()).orElse(null);
+			if (existingUser != null) {
+				existingUser.setUsername(user.getUsername());
+				existingUser.setPassword(user.getPassword());
+				existingUser.setRole(user.getRole());
+				existingUser.setId(user.getId());
+				existingUser.setStocksHeld(user.getStocksHeld());
+				existingUser.setCreatedAt(user.getCreatedAt());
+				existingUser.setTotalMoney(user.getTotalMoney());
+
+
+
+				return users.save(existingUser);
+			}
 		}
 		return users.save(user);
 	}
