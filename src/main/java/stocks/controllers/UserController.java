@@ -100,6 +100,42 @@ public class UserController {
 				
 				
 	}
+
+	@GetMapping("/sell/{stockSymbol}/{amountSell}")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<String> sell(@PathVariable String stockSymbol,@PathVariable String amountSell,@RequestHeader("Authorization") String authHead ) throws IOException{
+		// Extract the JWT token from the Authorization header
+		User user = getUser(authHead);
+
+		if(user == null) return ResponseEntity.badRequest().body("error with user info");
+		Stock stock = null;
+		boolean contains = false;
+		for(Stock s:user.getStocksHeld()) {
+			if(s.getSymbol().equalsIgnoreCase(stockSymbol)) {
+				stock = s;
+				contains = true;
+				break;
+			}
+		}
+
+		if(!contains) {
+			return ResponseEntity.badRequest().body("does not own any of this stock");
+		}
+		double total = user.getTotal();
+		stock.setPrice(stockController.getPrice(stockSymbol));
+		if(stock.getCounter() < Integer.parseInt(amountSell)){
+			return ResponseEntity.badRequest().body("not enough stocks to sell");
+		}else{
+			stock.setCounter(stock.getCounter() - Integer.parseInt(amountSell));
+		}
+		user.updateTotal();
+		userService.saveUser(user);
+
+
+
+		return ResponseEntity.ok(null);
+
+	}
 	
 	public User getUser(String header){
 		// Extract the JWT token from the Authorization header

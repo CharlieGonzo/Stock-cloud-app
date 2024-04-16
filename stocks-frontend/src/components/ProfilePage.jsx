@@ -47,7 +47,7 @@ function ProfilePage() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        //logout();
+        logout();
       });
   };
 

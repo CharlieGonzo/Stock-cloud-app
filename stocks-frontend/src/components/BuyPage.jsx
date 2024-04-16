@@ -1,6 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setter } from "../tokenSlice";
-import { Navigate } from "react-router";
 import { useEffect, useState } from "react";
 import "../style/home.css";
 
@@ -13,7 +10,6 @@ function BuyPage() {
   const [currentSymbol, setCurrentSymbol] = useState("");
   const [buyAmount, setBuyAmount] = useState("");
   const [sellAmount, setSellAmount] = useState("");
-  const [update, setUpdate] = useState(false);
   const [error, setError] = useState(false);
 
   const headers = {
@@ -121,14 +117,31 @@ function BuyPage() {
       });
   };
 
-  const sell = async () => {};
+  const sell = async () => {
+    let s = "/api/sell/" + currentSymbol + "/" + sellAmount;
+    console.log("here");
+    fetch(s, {
+      method: "Get",
+      headers: headers,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          setError(true);
+          throw new Error("Network response was not ok");
+        }
+        return response.json;
+      })
+      .then((data) => {
+        
+      })
+      .catch((e) => {
+        console.error("Error:", e);
+        setError(true);
+      });
+  };
 
-  const listItems = () => {
-   user.stocks.map
-      
-  }
-    
   
+
   
 
   const ProfilePage = () => {
@@ -144,13 +157,13 @@ function BuyPage() {
         type="text"
         onChange={(e) => setSymbol(e.target.value)}
       />
-      <h3>Total money available to spend: {user && user.totalMoney}</h3>
-      <h3>Total money invested: {user && user.totalInvested}</h3>
-      <h3>Total money overall: {user && user.totalInvested + user.totalMoney}</h3>
+     <h3>total invested: {user && <b>${(Math.round(user.totalInvested *100) / 100)}</b>}</h3>
+      <h3>total money: {user && <b>${(Math.round(user.totalMoney *100) / 100)}</b>}</h3>
+      <h3>total to Spend: {user && <b>${(Math.round(user.totalMoney *100) / 100) - (Math.round(user.totalInvested *100)/100)}</b>}</h3>
       <h3>Stocks {stocksList && stocksList.map((stock) => {
         return (
         <ul key={stock.symbol}>
-          <li>{stock.symbol} count: {stock.counter} Price: {stock.price} Total : {stock.price*stock.counter}</li>
+          <li>{stock.symbol} count: {stock.counter} Price per: {(Math.round(stock.price *100) / 100)} Total : {(Math.round(stock.price*stock.counter *100) / 100)}</li>
         </ul>
         )
       })}</h3>
