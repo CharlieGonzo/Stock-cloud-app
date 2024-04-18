@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.springframework.data.annotation.Id;
@@ -42,7 +44,7 @@ public class User implements UserDetails{
 	private String password;
 	
 	@Builder.Default
-	private TreeSet<Stock> stocksHeld = new TreeSet<>();
+	private HashMap<String,Stock> stocksHeld = new HashMap<>();
 	
 	LocalDate createdAt;
 	
@@ -54,15 +56,29 @@ public class User implements UserDetails{
 		return Arrays.asList(new SimpleGrantedAuthority(role.name()));
 	}
 	
+	public double getTotalUpToDate() throws IOException {
+		double invest = 0;
+		for(String s: stocksHeld.keySet()) {
+			Stock stock = stocksHeld.get(s);
+			stock.updatePrice();
+			invest += stock.getPrice() * stock.getCounter();
+		}
+		updateTotal(invest);
+		return invest;
+	}
+	
 	public double getTotalInvested() throws IOException {
 		double invest = 0;
-		for(Stock s:stocksHeld) {
-			s.updatePrice();
-
-			invest += s.getPrice() * s.getCounter();
+		for(String s: stocksHeld.keySet()) {
+			invest += stocksHeld.get(s).getPrice() * stocksHeld.get(s).getCounter();
 		}
 
 		return invest;
+	}
+	
+	private void updateTotal(double invest) {
+		double toSpend = totalMoney - invest;
+		totalMoney = invest + toSpend;
 	}
 
 	public void updateTotal() throws IOException {

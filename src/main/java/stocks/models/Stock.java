@@ -26,7 +26,7 @@ public class Stock implements Comparable<Stock>{
 	}
 	
 	public void buy(int amountBought) {
-		counter += amountBought;
+		counter = counter + amountBought;
 	}
 
 	public void updatePrice() throws IOException {

@@ -1,6 +1,8 @@
 package stocks.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +20,7 @@ public class UserInfo {
 	
 	private String username;
 	
-	private TreeSet<Stock> stocks;
+	private Object[] stocks;
 	
 	private double totalMoney;
 	

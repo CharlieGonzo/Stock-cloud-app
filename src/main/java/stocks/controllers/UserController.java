@@ -67,29 +67,24 @@ public class UserController {
 		User user = getUser(authHead);
 
 		if(user == null) return ResponseEntity.badRequest().build();
-		Stock stock = null;
-		boolean contains = false;
-		for(Stock s:user.getStocksHeld()) {
-			if(s.getSymbol().toLowerCase().equals(stockSymbol.toLowerCase())) {
-				stock = s;
-				contains = true;
-				break;
-			}
-		}
-
-		if(!contains) {
+		Stock stock = user.getStocksHeld().get(stockSymbol.toLowerCase());
+		if(stock == null) {
 			stock = new Stock();
-			stock.setSymbol(stockSymbol);
-			user.getStocksHeld().add(stock);
+			stock.setSymbol(stockSymbol.toLowerCase());
+			user.getStocksHeld().put(stock.getSymbol(), stock);
 		}
-		double total = user.getTotal();
-		stock.setPrice(stockController.getPrice(stockSymbol));
-		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
 
+		
+		double total = user.getTotal();
+		stock.updatePrice();
+		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
 			stock.buy(Integer.valueOf(amountBought));
+			
 		}else{
-			return ResponseEntity.ok("not enough money");
+			return ResponseEntity.badRequest().body("not enough money");
 		}
+		user.updateTotal();
+		//save updates to database
 		userService.saveUser(user);
 
 		
@@ -108,25 +103,20 @@ public class UserController {
 		User user = getUser(authHead);
 
 		if(user == null) return ResponseEntity.badRequest().body("error with user info");
-		Stock stock = null;
-		boolean contains = false;
-		for(Stock s:user.getStocksHeld()) {
-			if(s.getSymbol().equalsIgnoreCase(stockSymbol)) {
-				stock = s;
-				contains = true;
-				break;
-			}
-		}
-
-		if(!contains) {
+		Stock stock = user.getStocksHeld().get(stockSymbol.toLowerCase().toLowerCase());
+		if(stock == null) {
 			return ResponseEntity.badRequest().body("does not own any of this stock");
 		}
-		double total = user.getTotal();
-		stock.setPrice(stockController.getPrice(stockSymbol));
+				
+		
+		stock.updatePrice();
 		if(stock.getCounter() < Integer.parseInt(amountSell)){
 			return ResponseEntity.badRequest().body("not enough stocks to sell");
 		}else{
 			stock.setCounter(stock.getCounter() - Integer.parseInt(amountSell));
+			if(stock.getCounter() == 0) {
+				user.getStocksHeld().remove(stockSymbol.toLowerCase());
+			}
 		}
 		user.updateTotal();
 		userService.saveUser(user);
@@ -136,6 +126,19 @@ public class UserController {
 		return ResponseEntity.ok(null);
 
 	}
+	
+	/*private void hasStock(Stock stock,User user) {
+		if(user.getStocksHeld().contains(stock)) {
+			for(Stock s:user.getStocksHeld()) {
+				if(s.getSymbol().toLowerCase().equals(stock.getSymbol().toLowerCase())) {
+					stock = s;
+					break;
+				}
+			}
+		}else {
+			user.getStocksHeld().add(stock);
+		}
+	}*/
 	
 	public User getUser(String header){
 		// Extract the JWT token from the Authorization header
@@ -164,7 +167,7 @@ public class UserController {
 		//only send back what we need
 		info.updateTotal();
 		userService.saveUser(info);
-		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld(),info.getTotal(),info.getTotalInvested()));
+		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getTotal(),info.getTotalUpToDate()));
 		
 	}
 

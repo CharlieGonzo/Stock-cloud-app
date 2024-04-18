@@ -4,7 +4,7 @@ import "../style/home.css";
 function BuyPage() {
   const [user, setUser] = useState(null);
   const [symbol, setSymbol] = useState("");
-  const [stocksList,setStocksList] = useState([]);
+  const [stocksList, setStocksList] = useState([]);
   const [stockPrice, setStockPrice] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [currentSymbol, setCurrentSymbol] = useState("");
@@ -19,12 +19,9 @@ function BuyPage() {
 
   useEffect(() => {
     getInfo();
-  },[])
-
- 
+  }, []);
 
   useEffect(() => {
-   
     const intervalId = setInterval(() => {
       getInfo();
       if (currentSymbol != "") {
@@ -32,7 +29,7 @@ function BuyPage() {
       }
     }, 5000); // 5000 milliseconds = 5 seconds
     return () => clearInterval(intervalId);
-  },[]);
+  }, []);
 
   const getInfo = async () => {
     fetch("/api/user-info", {
@@ -52,12 +49,9 @@ function BuyPage() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
         window.location.href = "/";
-        
-        
       });
   };
 
@@ -76,7 +70,7 @@ function BuyPage() {
         return response.json;
       })
       .then((data) => {
-        
+        getInfo();
       })
       .catch((e) => {
         console.error("Error:", e);
@@ -98,9 +92,7 @@ function BuyPage() {
         return response.text();
       })
       .then((data) => {
-       
         let a = data.split(",");
-        console.log(a);
         if (a[8] != null) {
           setCompanyName(a[7] + a[8]);
         } else {
@@ -108,7 +100,6 @@ function BuyPage() {
         }
         setStockPrice(a[4]);
         setCurrentSymbol(symbol);
-        setUpdate(true);
         if (error) setError(false);
       })
       .catch((error) => {
@@ -131,18 +122,12 @@ function BuyPage() {
         }
         return response.json;
       })
-      .then((data) => {
-        
-      })
+      .then((data) => {})
       .catch((e) => {
         console.error("Error:", e);
         setError(true);
       });
   };
-
-  
-
-  
 
   const ProfilePage = () => {
     window.location.href = "/ProfilePage";
@@ -157,16 +142,36 @@ function BuyPage() {
         type="text"
         onChange={(e) => setSymbol(e.target.value)}
       />
-     <h3>total invested: {user && <b>${(Math.round(user.totalInvested *100) / 100)}</b>}</h3>
-      <h3>total money: {user && <b>${(Math.round(user.totalMoney *100) / 100)}</b>}</h3>
-      <h3>total to Spend: {user && <b>${(Math.round(user.totalMoney *100) / 100) - (Math.round(user.totalInvested *100)/100)}</b>}</h3>
-      <h3>Stocks {stocksList && stocksList.map((stock) => {
-        return (
-        <ul key={stock.symbol}>
-          <li>{stock.symbol} count: {stock.counter} Price per: {(Math.round(stock.price *100) / 100)} Total : {(Math.round(stock.price*stock.counter *100) / 100)}</li>
-        </ul>
-        )
-      })}</h3>
+      <h3>
+        total invested:{" "}
+        {user && <b>${Math.round(user.totalInvested * 100) / 100}</b>}
+      </h3>
+      <h3>
+        total money: {user && <b>${Math.round(user.totalMoney * 100) / 100}</b>}
+      </h3>
+      <h3>
+        total to Spend:{" "}
+        {user && (
+          <b>
+            ${Math.round((user.totalMoney - user.totalInvested) * 100) / 100}
+          </b>
+        )}
+      </h3>
+      <h3>
+        Stocks{" "}
+        {stocksList &&
+          stocksList.map((stock) => {
+            return (
+              <ul key={stock.symbol}>
+                <li>
+                  {stock.symbol} count: {stock.counter} Price per:{" "}
+                  {Math.round(stock.price * 100) / 100} Total :{" "}
+                  {Math.round(stock.price * stock.counter * 100) / 100}
+                </li>
+              </ul>
+            );
+          })}
+      </h3>
       <button onClick={() => search()}>search</button>
       <button onClick={() => ProfilePage()}>back to profile</button>
       {error && (

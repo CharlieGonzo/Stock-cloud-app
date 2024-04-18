@@ -65,6 +65,14 @@ const Register = () => {
             </div>
 
             <button type="submit">Register</button>
+            <button
+              type="button"
+              onClick={(e) => {
+                window.location.href = "/";
+              }}
+            >
+              return to login page
+            </button>
           </div>
         </form>
       </div>
