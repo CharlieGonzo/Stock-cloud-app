@@ -51,6 +51,7 @@ public class UserService {
 				existingUser.setRole(user.getRole());
 				existingUser.setId(user.getId());
 				existingUser.setStocksHeld(user.getStocksHeld());
+				existingUser.setHistory(user.getHistory());
 				existingUser.setCreatedAt(user.getCreatedAt());
 				existingUser.setTotalMoney(user.getTotalMoney());
 

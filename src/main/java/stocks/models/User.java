@@ -41,7 +41,8 @@ public class User implements UserDetails{
 	@Builder.Default
 	private HashMap<String,Stock> stocksHeld = new HashMap<>();
 
-	private LinkedList<StockHistoryStatement> history;
+	@Builder.Default
+	private LinkedList<StockHistoryStatement> history = new LinkedList<>();
 	
 	LocalDate createdAt;
 	

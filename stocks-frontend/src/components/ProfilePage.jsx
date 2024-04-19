@@ -87,7 +87,9 @@ function ProfilePage() {
         )}
       </h3>
       <button onClick={goToBuyPage}>Buy Stock</button>
+      <button onClick={() => window.location.href = "/StockHistory"}>History page</button>
       <button onClick={logout}>logout</button>
+      
     </div>
   );
 }

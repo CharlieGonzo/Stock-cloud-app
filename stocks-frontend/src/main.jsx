@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import store from "./store.jsx";
 import ProfilePage from "./components/ProfilePage.jsx";
 import BuyPage from "./components/BuyPage.jsx";
+import StockHistory from "./components/StockHistory.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/Register" element={<Register />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/BuyPage" element={<BuyPage />} />
+          <Route path="/StockHistory" element={<StockHistory />} />
         </Routes>
       </BrowserRouter>
     </Provider>

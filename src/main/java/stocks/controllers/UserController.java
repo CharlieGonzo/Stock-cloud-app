@@ -2,6 +2,8 @@ package stocks.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +83,8 @@ public class UserController {
 		}else{
 			return ResponseEntity.badRequest().body("not enough money");
 		}
-		user.getHistory().add(new StockHistoryStatement(stockSymbol,Integer.parseInt(amountBought),false, LocalDate.now()));
+		user.getHistory().add(new StockHistoryStatement(user.getUsername(), stockSymbol,Integer.parseInt(amountBought),false, LocalDate.now()));
+		System.out.println(user.getHistory().size());
 		user.updateTotal();
 		//save updates to database
 		userService.saveUser(user);
@@ -169,4 +172,16 @@ public class UserController {
 		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getHistory(),info.getTotal(),info.getTotalUpToDate()));
 
 	}
+
+	@GetMapping("/user-history")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<LinkedList<StockHistoryStatement>> getHistory(@RequestHeader("Authorization") String authorizationHeader){
+		User user = getUser(authorizationHeader);
+
+		if(user == null)
+			return ResponseEntity.badRequest().body(null);
+
+		return ResponseEntity.ok(user.getHistory());
+	}
+
 }
