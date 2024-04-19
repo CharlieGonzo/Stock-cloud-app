@@ -29,7 +29,7 @@ function BuyPage() {
       }
     }, 5000); // 5000 milliseconds = 5 seconds
     return () => clearInterval(intervalId);
-  }, []);
+  });
 
   const getInfo = async () => {
     fetch("/api/user-info", {
@@ -122,7 +122,7 @@ function BuyPage() {
         }
         return response.json;
       })
-      .then((data) => {})
+      .then((data) => {getInfo()})
       .catch((e) => {
         console.error("Error:", e);
         setError(true);

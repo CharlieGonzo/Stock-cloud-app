@@ -3,6 +3,7 @@ package stocks.models;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.TreeSet;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +22,8 @@ public class UserInfo {
 	private String username;
 	
 	private Object[] stocks;
+
+	private LinkedList<StockHistoryStatement> history;
 	
 	private double totalMoney;
 	

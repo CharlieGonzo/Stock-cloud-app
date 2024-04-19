@@ -1,6 +1,7 @@
 package stocks.controllers;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import stocks.dto.JwtAuthenticationResponse;
-import stocks.models.LoginCredentials;
-import stocks.models.Role;
-import stocks.models.Stock;
-import stocks.models.User;
-import stocks.models.UserInfo;
+import stocks.models.*;
 import stocks.repositories.UserRepository;
 import stocks.service.AuthenticationService;
 import stocks.service.JwtService;
@@ -59,7 +56,7 @@ public class UserController {
 	public JwtAuthenticationResponse login(@RequestBody LoginCredentials user){
 		return service.signIn(user);
 	}
-	
+
 	@GetMapping("/buy/{stockSymbol}/{amountBought}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<String> buy(@PathVariable String stockSymbol,@PathVariable String amountBought,@RequestHeader("Authorization") String authHead ) throws IOException{
@@ -74,26 +71,28 @@ public class UserController {
 			user.getStocksHeld().put(stock.getSymbol(), stock);
 		}
 
-		
+
 		double total = user.getTotal();
 		stock.updatePrice();
 		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
-			stock.buy(Integer.valueOf(amountBought));
-			
+			stock.buy(Integer.parseInt(amountBought));
+
+
 		}else{
 			return ResponseEntity.badRequest().body("not enough money");
 		}
+		user.getHistory().add(new StockHistoryStatement(stockSymbol,Integer.parseInt(amountBought),false, LocalDate.now()));
 		user.updateTotal();
 		//save updates to database
 		userService.saveUser(user);
 
-		
-		
+
+
 		return ResponseEntity.ok(null);
-				
-				
-				
-				
+
+
+
+
 	}
 
 	@GetMapping("/sell/{stockSymbol}/{amountSell}")
@@ -107,8 +106,8 @@ public class UserController {
 		if(stock == null) {
 			return ResponseEntity.badRequest().body("does not own any of this stock");
 		}
-				
-		
+
+
 		stock.updatePrice();
 		if(stock.getCounter() < Integer.parseInt(amountSell)){
 			return ResponseEntity.badRequest().body("not enough stocks to sell");
@@ -126,7 +125,7 @@ public class UserController {
 		return ResponseEntity.ok(null);
 
 	}
-	
+
 	/*private void hasStock(Stock stock,User user) {
 		if(user.getStocksHeld().contains(stock)) {
 			for(Stock s:user.getStocksHeld()) {
@@ -139,42 +138,35 @@ public class UserController {
 			user.getStocksHeld().add(stock);
 		}
 	}*/
-	
+
 	public User getUser(String header){
 		// Extract the JWT token from the Authorization header
 		String jwtToken = header.substring(7); // Assuming Bearer token format
 
 		// Extract the username from the JWT token
 		String username = jService.extractUserName(jwtToken);
-				
+
 		//create Optional object that finds if user is available
 		Optional<User> user = userService.findUserByUsername(username);
-				
+
 		//if user is present, returns only info that front end needs. Otherwise, send badRequest()
 		return user.orElse(null);
 
-    }
-	
-	
+	}
+
+
 
 	@GetMapping("/user-info")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<UserInfo> getUserInfo(@RequestHeader("Authorization") String authorizationHeader) throws IOException {
 		User info = getUser(authorizationHeader);
-		
+
 		if(info == null) return ResponseEntity.badRequest().build();
 
 		//only send back what we need
 		info.updateTotal();
 		userService.saveUser(info);
-		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getTotal(),info.getTotalUpToDate()));
-		
+		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getHistory(),info.getTotal(),info.getTotalUpToDate()));
+
 	}
-
-
-	
-	
-	
-	
-
 }

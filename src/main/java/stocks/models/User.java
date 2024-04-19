@@ -2,12 +2,7 @@ package stocks.models;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -45,6 +40,8 @@ public class User implements UserDetails{
 	
 	@Builder.Default
 	private HashMap<String,Stock> stocksHeld = new HashMap<>();
+
+	private LinkedList<StockHistoryStatement> history;
 	
 	LocalDate createdAt;
 	
@@ -70,6 +67,8 @@ public class User implements UserDetails{
 	public double getTotalInvested() throws IOException {
 		double invest = 0;
 		for(String s: stocksHeld.keySet()) {
+			Stock stock = stocksHeld.get(s);
+			stock.updatePrice();
 			invest += stocksHeld.get(s).getPrice() * stocksHeld.get(s).getCounter();
 		}
 
@@ -83,7 +82,7 @@ public class User implements UserDetails{
 
 	public void updateTotal() throws IOException {
 		double invest = getTotalInvested();
-		double toSpend = totalMoney - getTotalInvested();
+		double toSpend = totalMoney - invest;
 		totalMoney = invest + toSpend;
 	}
 
