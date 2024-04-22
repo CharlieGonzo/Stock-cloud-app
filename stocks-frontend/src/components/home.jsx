@@ -1,9 +1,6 @@
 import { useState } from "react";
 import "../style/home.css";
-import { useDispatch, useSelector } from "react-redux";
-import { setter } from "../tokenSlice.jsx";
-import { Link, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+
 
 function Home() {
   const [username, setUsername] = useState("");
