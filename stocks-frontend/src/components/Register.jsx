@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../style/home.css";
+import "../style/register.css";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Navigate } from "react-router";
@@ -9,7 +9,9 @@ const Register = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [inputerror, setInputError] = useState(false);
   const [error, setError] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
   const signUp = async (e) => {
     e.preventDefault();
@@ -24,47 +26,55 @@ const Register = () => {
       body: JSON.stringify(payload),
       headers: { "content-type": "application/json" },
     })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json?.token) {
-          localStorage.setItem("token", json.token);
-          dispatch(setter(json.token));
-          window.location.href = "/ProfilePage";
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status == "422") {
+            setInputError(true);
+          } else {
+            setError(true);
+          }
         }
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json);
+        localStorage.setItem("token", json.token);
+        window.location.href = "/ProfilePage";
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  if (localStorage.getItem("token") == null) {
-    return (
-      <div>
-        <form onSubmit={signUp}>
-          <div className="login">
-            <h1>Register here</h1>
+  return (
+    <div>
+      <form onSubmit={signUp}>
+        <div className="login">
+          <h1>Register here</h1>
 
-            <div className="inputs">
-              <label htmlFor="username">Enter username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                name="username"
-                id="username"
-              />
+          <div className="inputs">
+            <label htmlFor="username">Enter username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              id="username"
+              placeholder="need to be over 6 characters long"
+            />
 
-              <label htmlFor="password">Enter password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                name="password"
-                id="password"
-              />
-            </div>
+            <label htmlFor="password">Enter password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              id="password"
+              placeholder="need to be over 6 characters long"
+            />
 
             <button type="submit">Register</button>
+
             <button
               type="button"
               onClick={(e) => {
@@ -74,11 +84,12 @@ const Register = () => {
               return to login page
             </button>
           </div>
-        </form>
-      </div>
-    );
-  } else {
-    return <Navigate to="/ProfilePage" />;
-  }
+        </div>
+      </form>
+      {inputerror && <h2>input is invalid</h2>}
+      {error && <h2>Server error.Try again later</h2>}
+    </div>
+  );
 };
+
 export default Register;

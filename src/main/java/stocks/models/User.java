@@ -33,7 +33,8 @@ public class User implements UserDetails{
 	private String username;
 	
 
-	private double totalMoney = 1000;
+	@Builder.Default
+	private double totalMoney = 1000.00;
 	
 
 	private String password;
@@ -54,37 +55,33 @@ public class User implements UserDetails{
 		return Arrays.asList(new SimpleGrantedAuthority(role.name()));
 	}
 	
-	public double getTotalUpToDate() throws IOException {
-		double invest = 0;
-		for(String s: stocksHeld.keySet()) {
-			Stock stock = stocksHeld.get(s);
-			stock.updatePrice();
-			invest += stock.getPrice() * stock.getCounter();
-		}
-		updateTotal(invest);
-		return invest;
-	}
+	
 	
 	public double getTotalInvested() throws IOException {
 		double invest = 0;
+		double preInvest = 0;
 		for(String s: stocksHeld.keySet()) {
 			Stock stock = stocksHeld.get(s);
+			preInvest += stock.getPrice() * stock.getCounter();
 			stock.updatePrice();
 			invest += stocksHeld.get(s).getPrice() * stocksHeld.get(s).getCounter();
 		}
-
+		updateTotal(preInvest,invest);
 		return invest;
 	}
 	
-	private void updateTotal(double invest) {
-		double toSpend = totalMoney - invest;
-		totalMoney = invest + toSpend;
+	public double updateTotal(double preInvest,double invest) {
+		double difference = preInvest - invest;
+		totalMoney -= difference;
+		System.out.println(totalMoney);
+		return totalMoney;
 	}
 
-	public void updateTotal() throws IOException {
+	public double updateTotal() throws IOException {
 		double invest = getTotalInvested();
 		double toSpend = totalMoney - invest;
 		totalMoney = invest + toSpend;
+		return totalMoney;
 	}
 
 	public double getTotal() throws IOException {

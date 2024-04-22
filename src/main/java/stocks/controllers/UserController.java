@@ -44,11 +44,17 @@ public class UserController {
 	
 	@PostMapping("/Register")
 	public ResponseEntity<JwtAuthenticationResponse> Register(@RequestBody LoginCredentials register){
+		
+		if(register.getUsername().length() < 6 || register.getPassword().length() < 6) {
+			return ResponseEntity.status(422).build();
+		}
 		//if username is taken, return error code 409
 		Optional<User> user = userService.findUserByUsername(register.getUsername());
 		if(user.isPresent()) {
 			return ResponseEntity.status(409).build();
 		}
+		
+		
 
         return ResponseEntity.ok(service.signUp(register));
 	}
@@ -165,11 +171,14 @@ public class UserController {
 		User info = getUser(authorizationHeader);
 
 		if(info == null) return ResponseEntity.badRequest().build();
+		
 
-		//only send back what we need
-		info.updateTotal();
+	
+		
+		double invest = info.getTotalInvested();
+		UserInfo user = new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getHistory(),info.getTotal(),info.getTotalInvested());
 		userService.saveUser(info);
-		return ResponseEntity.ok(new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getHistory(),info.getTotal(),info.getTotalUpToDate()));
+		return ResponseEntity.ok(user);
 
 	}
 

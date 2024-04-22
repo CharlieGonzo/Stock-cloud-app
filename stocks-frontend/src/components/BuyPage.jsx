@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../style/home.css";
+import "../style/buyPage.css";
 
 function BuyPage() {
   const [user, setUser] = useState(null);
@@ -122,7 +122,9 @@ function BuyPage() {
         }
         return response.json;
       })
-      .then((data) => {getInfo()})
+      .then((data) => {
+        getInfo();
+      })
       .catch((e) => {
         console.error("Error:", e);
         setError(true);
@@ -134,73 +136,87 @@ function BuyPage() {
   };
 
   return (
-    <div className="login">
-      <h1>Buy/Sell page</h1>
-      <label htmlFor="symbol">Stock Symbol</label>
-      <input
-        id="symbol"
-        type="text"
-        onChange={(e) => setSymbol(e.target.value)}
-      />
-      <h3>
-        total invested:{" "}
-        {user && <b>${Math.round(user.totalInvested * 100) / 100}</b>}
-      </h3>
-      <h3>
-        total money: {user && <b>${Math.round(user.totalMoney * 100) / 100}</b>}
-      </h3>
-      <h3>
-        total to Spend:{" "}
-        {user && (
-          <b>
-            ${Math.round((user.totalMoney - user.totalInvested) * 100) / 100}
-          </b>
-        )}
-      </h3>
-      <h3>
-        Stocks{" "}
-        {stocksList &&
-          stocksList.map((stock) => {
-            return (
-              <ul key={stock.symbol}>
-                <li>
+    <div className="container">
+      <div className="header">
+        <h1>Buy/Sell Page</h1>
+        <div className="buttons">
+          <button onClick={() => search()}>Search</button>
+          <button onClick={() => ProfilePage()}>Back to Profile</button>
+        </div>
+      </div>
+      <div className="content">
+        <div className="form-group">
+          <label htmlFor="symbol">Stock Symbol</label>
+          <input
+            id="symbol"
+            type="text"
+            onChange={(e) => setSymbol(e.target.value)}
+          />
+        </div>
+        <div className="info">
+          <h2>
+            Total Invested: $
+            {user && <b>{Math.round(user.totalInvested * 100) / 100}</b>}
+          </h2>
+          <h2>Total Money: ${user && <b>{user.totalMoney}</b>}</h2>
+          <h2>
+            Total to Spend: $
+            {user && (
+              <b>
+                {Math.round((user.totalMoney - user.totalInvested) * 100) / 100}
+              </b>
+            )}
+          </h2>
+        </div>
+        <div className="stocks">
+          <h2>Stocks</h2>
+          {stocksList &&
+            stocksList.map((stock) => (
+              <div key={stock.symbol}>
+                <p>
                   {stock.symbol} count: {stock.counter} Price per:{" "}
-                  {Math.round(stock.price * 100) / 100} Total :{" "}
+                  {Math.round(stock.price * 100) / 100} Total:{" "}
                   {Math.round(stock.price * stock.counter * 100) / 100}
-                </li>
-              </ul>
-            );
-          })}
-      </h3>
-      <button onClick={() => search()}>search</button>
-      <button onClick={() => ProfilePage()}>back to profile</button>
+                </p>
+              </div>
+            ))}
+        </div>
+
+        {stockPrice !== "" && (
+          <>
+            <div className="info">
+              <h2>Stock Price: {stockPrice}</h2>
+              <h2>Company Name: {companyName}</h2>
+              <h2>Company Symbol: {currentSymbol.toUpperCase()}</h2>
+            </div>
+            <div className="actions">
+              <div className="form-group">
+                <input
+                  type="number"
+                  placeholder="Amount to Buy"
+                  onChange={(e) => setBuyAmount(Math.max(0, e.target.value))}
+                  min={0}
+                />
+                <button onClick={buy}>Buy</button>
+              </div>
+              <div className="form-group">
+                <input
+                  type="number"
+                  placeholder="Amount to Sell"
+                  onChange={(e) => setSellAmount(Math.max(0, e.target.value))}
+                  min={0}
+                />
+                <button onClick={sell}>Sell</button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
       {error && (
-        <p>error has occured. Check info you entered to see if it is correct</p>
-      )}
-      {stockPrice !== "" && (
-        <>
-          <h2>Stock Price {stockPrice}</h2>
-          <h2>Company Name: {companyName}</h2>
-          <h2>Company Symbol: {currentSymbol.toUpperCase()}</h2>
-          {}
-          <div>
-            <div>
-              <input
-                type="number"
-                onChange={(e) => setBuyAmount(e.target.value)}
-              />
-              <button onClick={buy}>buy</button>
-            </div>
-            <div>
-              <input
-                type="number"
-                onChange={(e) => setSellAmount(e.target.value)}
-              />
-              <button onClick={sell}>sell</button>
-            </div>
-            <div></div>
-          </div>
-        </>
+        <p className="error">
+          Error has occurred. Check the information you entered to see if it is
+          correct.
+        </p>
       )}
     </div>
   );

@@ -1,0 +1,94 @@
+.container {
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.buttons button {
+  margin-left: 10px;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1 1 100%;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.info,
+.stocks {
+  flex: 1 1 100%;
+  margin-bottom: 20px;
+}
+
+.stocks p {
+  margin: 5px 0;
+}
+
+.actions {
+  flex: 1 1 100%;
+  display: flex;
+}
+
+.actions .form-group {
+  flex: 1 1 50%;
+  margin-right: 10px;
+}
+
+.actions .form-group:last-child {
+  margin-right: 0;
+}
+
+.actions input[type="number"] {
+  width: calc(100% - 80px);
+}
+
+.actions button {
+  width: 70px;
+}

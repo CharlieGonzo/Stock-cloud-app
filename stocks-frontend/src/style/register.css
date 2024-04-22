@@ -1,17 +1,14 @@
-body {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-}
-
 .login {
   width: 300px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+h2 {
+  text-align: center;
+  color: red;
 }
 
 .login h1 {
@@ -39,9 +36,8 @@ body {
 button {
   width: 100%;
   padding: 10px;
+  margin-bottom: 10px;
   background-color: #007bff;
-  display: flex;
-  flex-direction: row;
   color: #fff;
   border: none;
   border-radius: 3px;
@@ -53,15 +49,16 @@ button:hover {
   background-color: #0056b3;
 }
 
-p {
+button.return {
+  background-color: #ccc;
+  color: #333;
+}
+
+button.return:hover {
+  background-color: #999;
+}
+
+button,
+button.return {
   text-align: center;
-}
-
-button a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-button a:hover {
-  text-decoration: underline;
 }

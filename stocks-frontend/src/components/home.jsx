@@ -66,8 +66,12 @@ function Home() {
       </div>
       <button onClick={submit}>Sign In</button>
       <p>don't have a account?</p>
-      <button>
-        <Link to="/Register">Register</Link>
+      <button
+        onClick={() => {
+          window.location.href = "/Register";
+        }}
+      >
+        Register
       </button>
     </div>
   );

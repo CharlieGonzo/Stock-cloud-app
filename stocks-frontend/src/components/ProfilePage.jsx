@@ -39,7 +39,7 @@ function ProfilePage() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        logout();
+        // logout();
       });
   };
 
@@ -65,7 +65,8 @@ function ProfilePage() {
                 <li>
                   {stock.symbol} price:
                   {<b>${Math.round(stock.price * 100) / 100}</b>} count:
-                  {stock.counter}
+                  {stock.counter} <br />
+                  total: {stock.price * stock.counter}
                 </li>
               </ul>
             );
@@ -87,9 +88,10 @@ function ProfilePage() {
         )}
       </h3>
       <button onClick={goToBuyPage}>Buy Stock</button>
-      <button onClick={() => window.location.href = "/StockHistory"}>History page</button>
+      <button onClick={() => (window.location.href = "/StockHistory")}>
+        History page
+      </button>
       <button onClick={logout}>logout</button>
-      
     </div>
   );
 }
