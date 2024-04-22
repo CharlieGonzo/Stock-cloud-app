@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Home from "./components/home.jsx";
+import Home from "./components/Home.jsx";
 import Register from "../src/components/Register.jsx";
 
 //allows us to set specific url routes to componenents in application
