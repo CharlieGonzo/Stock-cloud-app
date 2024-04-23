@@ -1,12 +1,12 @@
 import { useState } from "react";
 import "../style/register.css";
-import { useSelector, useDispatch } from "react-redux";
+
 
 import { Navigate } from "react-router";
-import { setter } from "../tokenSlice";
+
 
 const Register = () => {
-  const dispatch = useDispatch();
+ 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputerror, setInputError] = useState(false);

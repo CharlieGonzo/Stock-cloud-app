@@ -6,6 +6,7 @@ import { Navigate, useNavigate } from "react-router";
 function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   if (localStorage.getItem("token") != null) {
     window.location.href = "/ProfilePage";
@@ -66,7 +67,7 @@ function Home() {
       <p>don't have a account?</p>
       <button
         onClick={() => {
-         Navigate('/Register',{replace:true});
+         navigate('/Register',{replace:true});
         }}
       >
         Register
