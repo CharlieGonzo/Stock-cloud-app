@@ -40,7 +40,7 @@ const Register = () => {
       .then((json) => {
         console.log(json);
         localStorage.setItem("token", json.token);
-        window.location.href = "/ProfilePage";
+        navigate('/ProfilePage',{replace:true});;
       })
       .catch((err) => {
         console.error(err);
