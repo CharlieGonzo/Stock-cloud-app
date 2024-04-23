@@ -9,7 +9,7 @@ function Home() {
   const navigate = useNavigate();
 
   if (localStorage.getItem("token") != null) {
-    window.location.href = "/ProfilePage";
+    navigate('/ProfilePage',{replace:true});
   }
 
   function setSessionExpiration(expirationTimeInMinutes) {
@@ -35,7 +35,7 @@ function Home() {
         //if we recieve a token. Update it
         localStorage.setItem("token", json.token);
         setSessionExpiration(60);
-        window.location.href = "/ProfilePage";
+        navigate('/ProfilePage',{replace:true});
       })
       .catch((err) => {
         localStorage.removeItem("token");

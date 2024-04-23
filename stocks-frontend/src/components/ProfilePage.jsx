@@ -39,18 +39,18 @@ function ProfilePage() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        // logout();
+        logout();
       });
   };
 
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("sessionExpiration");
-    window.location.href = "/"; // Redirect using window.location
+    navigate('/',{replace:true}); //Redirect using window.location
   }
 
   function goToBuyPage() {
-    window.location.href = "/BuyPage"; // Redirect using window.location
+    navigate('/BuyPage',{replace:true}); // Redirect using window.location
   }
 
   return (

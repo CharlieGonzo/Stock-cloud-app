@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import "../style/history.css";
+import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const StockHistory = () => {
   const [history, setHistory] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getHistory();
@@ -48,7 +51,7 @@ const StockHistory = () => {
         ))}
       <button
         onClick={() => {
-          window.location.href = "/ProfilePage";
+         navigate('/ProfilePage',{replace:true})
         }}
       >
         Return to profile page

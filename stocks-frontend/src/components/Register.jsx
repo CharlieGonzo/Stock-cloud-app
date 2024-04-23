@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../style/register.css";
 
 
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 
 const Register = () => {
@@ -12,6 +12,7 @@ const Register = () => {
   const [inputerror, setInputError] = useState(false);
   const [error, setError] = useState(false);
   const [registered, setRegistered] = useState(false);
+  const navigate = useNavigate();
 
   const signUp = async (e) => {
     e.preventDefault();
@@ -78,7 +79,7 @@ const Register = () => {
             <button
               type="button"
               onClick={(e) => {
-                window.location.href = "/";
+                navigate('/',{replace:true});;
               }}
             >
               return to login page

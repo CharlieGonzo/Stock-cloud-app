@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "../style/home.css";
+import { Navigate } from "react-router";
+
 
 function BuyPage() {
   const [user, setUser] = useState(null);
@@ -11,6 +13,7 @@ function BuyPage() {
   const [buyAmount, setBuyAmount] = useState("");
   const [sellAmount, setSellAmount] = useState("");
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   const headers = {
     "Content-Type": "application/json",
@@ -51,7 +54,7 @@ function BuyPage() {
         console.error("Error:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
-        window.location.href = "/";
+        navigate('/',{replace:true})
       });
   };
 
@@ -130,7 +133,7 @@ function BuyPage() {
   };
 
   const ProfilePage = () => {
-    window.location.href = "/ProfilePage";
+    navigate('/ProfilePage',{replace:true});
   };
 
   return (
