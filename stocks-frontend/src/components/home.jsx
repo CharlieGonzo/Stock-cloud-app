@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../style/home.css";
+import { Navigate, useNavigate } from "react-router";
 
 
 function Home() {
@@ -65,7 +66,7 @@ function Home() {
       <p>don't have a account?</p>
       <button
         onClick={() => {
-          window.location.href = "/Register";
+         Navigate('/Register',{replace:true});
         }}
       >
         Register
