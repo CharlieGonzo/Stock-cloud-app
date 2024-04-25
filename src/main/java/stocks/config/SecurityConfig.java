@@ -54,8 +54,6 @@ public class SecurityConfig{
 
 
 
-
-    
     @Bean 
     AuthenticationProvider authenticationProvider() {
     	DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -71,6 +69,7 @@ public class SecurityConfig{
     
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+		//set up authentication restrictions
     	http.csrf(AbstractHttpConfigurer::disable)
     		.sessionManagement(session -> session
     				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

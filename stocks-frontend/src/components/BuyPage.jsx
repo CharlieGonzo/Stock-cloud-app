@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../style/home.css";
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 
 function BuyPage() {

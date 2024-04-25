@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import "../style/home.css";
+import { useNavigate } from "react-router";
 
 function ProfilePage() {
   const [stockList, setStockList] = useState([]);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getInfo();

@@ -31,7 +31,8 @@ public class SeedDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        
+
+        //always have an admin user in database
       if (userRepository.count() == 0) {
 
         User admin = new User();

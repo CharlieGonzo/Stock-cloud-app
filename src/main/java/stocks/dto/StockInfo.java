@@ -1,4 +1,4 @@
-package stocks.models;
+package stocks.dto;
 
 import lombok.Data;
 

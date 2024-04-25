@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,18 +69,16 @@ public class User implements UserDetails{
 		return invest;
 	}
 	
-	public double updateTotal(double preInvest,double invest) {
+	public void updateTotal(double preInvest, double invest) {
 		double difference = preInvest - invest;
 		totalMoney -= difference;
 		System.out.println(totalMoney);
-		return totalMoney;
 	}
 
-	public double updateTotal() throws IOException {
+	public void updateTotal() throws IOException {
 		double invest = getTotalInvested();
 		double toSpend = totalMoney - invest;
 		totalMoney = invest + toSpend;
-		return totalMoney;
 	}
 
 	public double getTotal() throws IOException {
