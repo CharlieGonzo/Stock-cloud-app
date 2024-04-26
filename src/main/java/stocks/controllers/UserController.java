@@ -80,13 +80,10 @@ public class UserController {
 	@GetMapping("/buy/{stockSymbol}/{amountBought}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<String> buy(@PathVariable String stockSymbol,@PathVariable String amountBought,@RequestHeader("Authorization") String authHead ) throws IOException{
-		// Extract the JWT token from the Authorization header
 		User user = getUser(authHead);
 
-		//if user doesn't exist return bad request
 		if(user == null) return ResponseEntity.badRequest().build();
 
-		//if user does not already own stock, add to their list
 		Stock stock = user.getStocksHeld().get(stockSymbol.toLowerCase());
 		if(stock == null) {
 			stock = new Stock();
@@ -99,8 +96,6 @@ public class UserController {
 		stock.updatePrice();
 		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
 			stock.buy(Integer.parseInt(amountBought));
-
-
 		}else{
 			return ResponseEntity.badRequest().body("not enough money");
 		}
@@ -109,16 +104,10 @@ public class UserController {
 		user.getHistory().add(new StockHistoryStatement(user.getUsername(), stockSymbol,Integer.parseInt(amountBought),false, LocalDate.now()));
 		user.updateTotal();
 
-
 		//save updates to database
 		userService.saveUser(user);
 
-
-
 		return ResponseEntity.ok(null);
-
-
-
 
 	}
 
@@ -164,18 +153,6 @@ public class UserController {
 
 	}
 
-	/*private void hasStock(Stock stock,User user) {
-		if(user.getStocksHeld().contains(stock)) {
-			for(Stock s:user.getStocksHeld()) {
-				if(s.getSymbol().toLowerCase().equals(stock.getSymbol().toLowerCase())) {
-					stock = s;
-					break;
-				}
-			}
-		}else {
-			user.getStocksHeld().add(stock);
-		}
-	}*/
 
 
 	/**
@@ -212,10 +189,7 @@ public class UserController {
 		User info = getUser(authorizationHeader);
 
 		if(info == null) return ResponseEntity.badRequest().build();
-		
 
-	
-		
 		double invest = info.getTotalInvested();
 		UserInfo user = new UserInfo(info.getUsername(),info.getStocksHeld().values().toArray(),info.getHistory(),info.getTotal(),info.getTotalInvested());
 		userService.saveUser(info);

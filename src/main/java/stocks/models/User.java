@@ -54,8 +54,7 @@ public class User implements UserDetails{
 		return Arrays.asList(new SimpleGrantedAuthority(role.name()));
 	}
 	
-	
-	
+
 	public double getTotalInvested() throws IOException {
 		double invest = 0;
 		double preInvest = 0;

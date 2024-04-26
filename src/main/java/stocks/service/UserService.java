@@ -55,9 +55,6 @@ public class UserService {
 				existingUser.setHistory(user.getHistory());
 				existingUser.setCreatedAt(user.getCreatedAt());
 				existingUser.setTotalMoney(user.getTotalMoney());
-
-
-
 				return users.save(existingUser);
 			}
 		}

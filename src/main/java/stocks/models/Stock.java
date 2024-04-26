@@ -39,7 +39,6 @@ public class Stock implements Comparable<Stock>{
 
 	@Override
 	public int compareTo(Stock o) {
-		
 		if(o.getSymbol().equals(this.getSymbol())) {
 			return 0;
 		}
