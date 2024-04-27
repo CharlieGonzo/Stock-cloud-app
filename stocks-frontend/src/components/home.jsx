@@ -6,6 +6,7 @@ function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
 
   if (localStorage.getItem("token") != null) {
     navigate("/ProfilePage", { replace: true });
@@ -39,12 +40,14 @@ function Home() {
       .catch((err) => {
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
+        setError(true);
         console.error(err);
       });
   };
 
   return (
     <div className="login">
+      <h1>Stock-Cloud</h1>
       <h1>please login in</h1>
       <div className="inputs">
         <label htmlFor="username">Username:</label>
@@ -71,6 +74,9 @@ function Home() {
       >
         Register
       </button>
+      {error && (
+        <h4 className="error">Wrong login credentials. Please try again</h4>
+      )}{" "}
     </div>
   );
 }
