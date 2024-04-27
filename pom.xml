@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>sia</groupId>
-	<artifactId>Stocks</artifactId>
+	<artifactId>stocks</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Stocks</name>
+	<name>stocks</name>
 	<description>stock simulation service</description>
 	<properties>
 		<java.version>17</java.version>
@@ -96,6 +96,23 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>jib-maven-plugin</artifactId>
+            <version>3.2.1</version>
+            <configuration>
+                <from>
+                    <image>openjdk:17-alpine</image>
+                </from>
+                <container>
+                    <ports>
+                        <port>8080</port>
+                    </ports>
+                    <format>OCI</format>
+                </container>
+            </configuration>
+        </plugin>
 		</plugins>
 	</build>
 
