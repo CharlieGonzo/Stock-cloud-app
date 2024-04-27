@@ -21,18 +21,7 @@ public class StocksApplication{
 		SpringApplication.run(StocksApplication.class, args);
 	}
 
-	/*
-	@Override
-	public void run(String... args) throws Exception {
-		User user = new User("hello","hi");
-		Optional<User> use = users.saveUser(user);
-		System.out.println(use.get());
-		if(use.isEmpty()) {
-			throw new RuntimeException("why");
-		}
-		
-	}
-	*/
+
 	
 	
 

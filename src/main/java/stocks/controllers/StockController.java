@@ -37,50 +37,65 @@ public class StockController{
 	 */
 	@GetMapping("/{stockSymbol}")
 	public ResponseEntity<String> getStockInfo(@PathVariable String stockSymbol) throws IOException {
-		
-		/*This URL path to obtain CSV file from Yahoo Finance
-		 * We use the the stock symbol to find what stock info we want, and we use the current time method to get the most recent data
-		 */
-		String stockUrl = "https://query1.finance.yahoo.com/v7/finance/download/" + stockSymbol + "?period1=" + this.getCurrentTime() 
-		+ "&period2=" + this.getCurrentTime() + "&interval=1d&events=history&includeAdjustedClose=true";
-
-		  
 		//creates URL object that downloads CSV File
-		URL oracle = null;
-		BufferedReader in = null;
-		try {
-				oracle = new URL(stockUrl);
-				in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-	     	} catch (Exception e) {
-
-				try {
-					stockUrl = "https://query1.finance.yahoo.com/v7/finance/download/" + stockSymbol + "?period1=" + (this.getCurrentTime()-86400)
-							+ "&period2=" + (this.getCurrentTime()-86400) + "&interval=1d&events=history&includeAdjustedClose=true";
-					oracle = new URL(stockUrl);
-					in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-				} catch (MalformedURLException ignored) {
-					return ResponseEntity.badRequest().build();
-				}
-		}
+		BufferedReader in = createUrlReader(stockSymbol);
 
 		//runs through all the lines of the CSV file and if it line containing the word "Date"  we know it contains the current info
 		//of the stock we are searching for
-	    String stockInfo;
-	    while ((stockInfo = in.readLine()) != null)
-	     		if (!stockInfo.contains("Date")) {
-	     			return ResponseEntity.ok(stockInfo + ", " +  SymbolToNameTranslator.TranslateToCompanyName(stockSymbol));
-				 }
+        assert in != null;
+        String info = parseStockInfo(in,stockSymbol);
+	    if(info != null)
+			return ResponseEntity.ok(info);
 
 	   return ResponseEntity.badRequest().build();
 	        		
 	}
-	
-	
 
+	private String parseStockInfo(BufferedReader in,String symbol) throws IOException {
+		String stockInfo;
+		while (true) {
+			assert in != null;
+
+			if ((stockInfo = in.readLine()) == null) return null;
+			if (!stockInfo.contains("Date")) {
+				return stockInfo + ", " +  SymbolToNameTranslator.TranslateToCompanyName(symbol);
+			}
+		}
+	}
+
+	private BufferedReader createUrlReader(String symbol){
+		URL oracle = null;
+		BufferedReader in = null;
+		try {
+			oracle = new URL(getStockCsv(false,symbol));
+			in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+		} catch (Exception e) {
+			try {
+				oracle = new URL(getStockCsv(true,symbol));
+				in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+			} catch (IOException ignored) {
+				return null;
+			}
+		}
+		return in;
+	}
+
+	private String getStockCsv(boolean weekend,String symbol){
+		if(!weekend){
+			return "https://query1.finance.yahoo.com/v7/finance/download/" + symbol + "?period1=" + this.getCurrentTime()
+					+ "&period2=" + this.getCurrentTime() + "&interval=1d&events=history&includeAdjustedClose=true";
+		}else{
+			return "https://query1.finance.yahoo.com/v7/finance/download/" + symbol + "?period1=" + (this.getCurrentTime()-86400)
+					+ "&period2=" + (this.getCurrentTime()-86400) + "&interval=1d&events=history&includeAdjustedClose=true";
+		}
+	}
+
+	
 
 	public double getPrice(String symbol) throws IOException {
 		String s = this.getStockInfo(symbol).getBody();
-		return Double.parseDouble(s.split(",")[4]);
+        assert s != null;
+        return Double.parseDouble(s.split(",")[4]);
 	}
 
 

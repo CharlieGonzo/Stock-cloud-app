@@ -45,6 +45,7 @@ public class UserService {
 		} else {
 			// Check if the user exists in the database
 			User existingUser = users.findById(user.getId()).orElse(null);
+			//updates user if user already exist
 			if (existingUser != null) {
 				existingUser.setUsername(user.getUsername());
 				existingUser.setPassword(user.getPassword());
@@ -54,9 +55,6 @@ public class UserService {
 				existingUser.setHistory(user.getHistory());
 				existingUser.setCreatedAt(user.getCreatedAt());
 				existingUser.setTotalMoney(user.getTotalMoney());
-
-
-
 				return users.save(existingUser);
 			}
 		}
@@ -73,7 +71,7 @@ public class UserService {
 	}
 	
 	public boolean deleteByUsername(String username) {
-		if(users.findByUsername(username) == null) {
+		if(users.findByUsername(username).isEmpty()) {
 			return false;
 		}
 		users.deleteByUsername(username);

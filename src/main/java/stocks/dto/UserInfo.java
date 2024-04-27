@@ -1,4 +1,4 @@
-package stocks.models;
+package stocks.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import stocks.models.StockHistoryStatement;
 
 @NoArgsConstructor
 @AllArgsConstructor
