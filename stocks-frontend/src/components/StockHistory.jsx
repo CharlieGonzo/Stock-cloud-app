@@ -18,7 +18,7 @@ const StockHistory = () => {
       Authorization: "Bearer " + localStorage.getItem("token"),
     };
 
-    fetch("/api/user-history", {
+    fetch("https://stocks-latest.onrender.com/api/user-history", {
       method: "GET",
       headers: header,
     })
@@ -51,7 +51,7 @@ const StockHistory = () => {
         ))}
       <button
         onClick={() => {
-         navigate('/ProfilePage',{replace:true})
+          navigate("/ProfilePage", { replace: true });
         }}
       >
         Return to profile page

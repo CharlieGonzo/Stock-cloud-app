@@ -23,7 +23,7 @@ function Home() {
       password: password,
     };
     //post with fetch api
-    fetch("/api/Login", {
+    fetch("https://stocks-latest.onrender.com/api/Login", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: { "Content-type": "application/json" },

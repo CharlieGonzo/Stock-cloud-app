@@ -1,12 +1,9 @@
 import { useState } from "react";
 import "../style/register.css";
 
-
 import { Navigate, useNavigate } from "react-router";
 
-
 const Register = () => {
- 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [inputerror, setInputError] = useState(false);
@@ -22,7 +19,7 @@ const Register = () => {
       password: password,
     };
     //post with fetch api
-    fetch("/api/Register", {
+    fetch("https://stocks-latest.onrender.com/api/Register", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: { "content-type": "application/json" },
@@ -40,7 +37,7 @@ const Register = () => {
       .then((json) => {
         console.log(json);
         localStorage.setItem("token", json.token);
-        navigate('/ProfilePage',{replace:true});;
+        navigate("/ProfilePage", { replace: true });
       })
       .catch((err) => {
         console.error(err);
@@ -79,7 +76,7 @@ const Register = () => {
             <button
               type="button"
               onClick={(e) => {
-                navigate('/',{replace:true});;
+                navigate("/", { replace: true });
               }}
             >
               return to login page

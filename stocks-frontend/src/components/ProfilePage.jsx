@@ -24,7 +24,7 @@ function ProfilePage() {
       Authorization: "Bearer " + localStorage.getItem("token"),
     };
 
-    fetch("/api/user-info", {
+    fetch("https://stocks-latest.onrender.com/api/user-info", {
       method: "GET",
       headers: headers,
     })
@@ -48,11 +48,11 @@ function ProfilePage() {
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("sessionExpiration");
-    navigate('/',{replace:true}); //Redirect using window.location
+    navigate("/", { replace: true }); //Redirect using window.location
   }
 
   function goToBuyPage() {
-    navigate('/BuyPage',{replace:true}); // Redirect using window.location
+    navigate("/BuyPage", { replace: true }); // Redirect using window.location
   }
 
   return (

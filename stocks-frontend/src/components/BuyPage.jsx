@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "../style/home.css";
 import { useNavigate } from "react-router";
 
-
 function BuyPage() {
   const [user, setUser] = useState(null);
   const [symbol, setSymbol] = useState("");
@@ -35,7 +34,7 @@ function BuyPage() {
   });
 
   const getInfo = async () => {
-    fetch("/api/user-info", {
+    fetch("https://stocks-latest.onrender.com/api/user-info", {
       method: "GET",
       headers: headers,
     })
@@ -54,12 +53,16 @@ function BuyPage() {
         console.error("Error:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("sessionExpiration");
-        navigate('/',{replace:true})
+        navigate("/", { replace: true });
       });
   };
 
   const buy = async () => {
-    let s = "/api/buy/" + currentSymbol + "/" + buyAmount;
+    let s =
+      "https://stocks-latest.onrender.com/api/buy/" +
+      currentSymbol +
+      "/" +
+      buyAmount;
     console.log("here");
     fetch(s, {
       method: "Get",
@@ -82,7 +85,7 @@ function BuyPage() {
   };
 
   const search = async () => {
-    let s = "/stock/" + symbol;
+    let s = "https://stocks-latest.onrender.com/stock/" + symbol;
     fetch(s, {
       method: "GET",
       headers: headers,
@@ -112,7 +115,11 @@ function BuyPage() {
   };
 
   const sell = async () => {
-    let s = "/api/sell/" + currentSymbol + "/" + sellAmount;
+    let s =
+      "https://stocks-latest.onrender.com/api/sell/" +
+      currentSymbol +
+      "/" +
+      sellAmount;
     console.log("here");
     fetch(s, {
       method: "Get",
@@ -125,7 +132,9 @@ function BuyPage() {
         }
         return response.json;
       })
-      .then((data) => {getInfo()})
+      .then((data) => {
+        getInfo();
+      })
       .catch((e) => {
         console.error("Error:", e);
         setError(true);
@@ -133,7 +142,7 @@ function BuyPage() {
   };
 
   const ProfilePage = () => {
-    navigate('/ProfilePage',{replace:true});
+    navigate("/ProfilePage", { replace: true });
   };
 
   return (
@@ -150,7 +159,8 @@ function BuyPage() {
         {user && <b>${Math.round(user.totalInvested * 100) / 100}</b>}
       </h3>
       <h3>
-        total money: {user && <b>${Math.round(user.totalMoney * 1000) / 1000}</b>}
+        total money:{" "}
+        {user && <b>${Math.round(user.totalMoney * 1000) / 1000}</b>}
       </h3>
       <h3>
         total to Spend:{" "}
