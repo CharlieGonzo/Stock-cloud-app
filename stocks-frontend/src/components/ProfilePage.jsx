@@ -90,7 +90,7 @@ function ProfilePage() {
         )}
       </h3>
       <button onClick={goToBuyPage}>Buy Stock</button>
-      <button onClick={() => (window.location.href = "/StockHistory")}>
+      <button onClick={() => navigate("/StockHistory", { replace: true })}>
         History page
       </button>
       <button onClick={logout}>logout</button>

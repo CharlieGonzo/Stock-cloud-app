@@ -21,6 +21,7 @@ import stocks.service.UserService;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://stock-cloud-app.onrender.com")
 public class UserController {
 	
 	@Autowired
@@ -94,7 +95,7 @@ public class UserController {
 		//update stock prices and user info
 		double total = user.getTotal();
 		stock.updatePrice();
-		if((stock.getPrice()*stock.getCounter() + user.getTotalInvested()) < total) {
+		if((stock.getPrice()*Integer.parseInt(amountBought) + user.getTotalInvested()) < total) {
 			stock.buy(Integer.parseInt(amountBought));
 		}else{
 			return ResponseEntity.badRequest().body("not enough money");
