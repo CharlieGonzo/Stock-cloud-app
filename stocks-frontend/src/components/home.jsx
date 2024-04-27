@@ -2,14 +2,13 @@ import { useState } from "react";
 import "../style/home.css";
 import { Navigate, useNavigate } from "react-router";
 
-
 function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   if (localStorage.getItem("token") != null) {
-    navigate('/ProfilePage',{replace:true});
+    navigate("/ProfilePage", { replace: true });
   }
 
   function setSessionExpiration(expirationTimeInMinutes) {
@@ -35,7 +34,7 @@ function Home() {
         //if we recieve a token. Update it
         localStorage.setItem("token", json.token);
         setSessionExpiration(60);
-        navigate('/ProfilePage',{replace:true});
+        navigate("/ProfilePage", { replace: true });
       })
       .catch((err) => {
         localStorage.removeItem("token");
@@ -67,7 +66,7 @@ function Home() {
       <p>don't have a account?</p>
       <button
         onClick={() => {
-         navigate('/Register',{replace:true});
+          navigate("/Register", { replace: true });
         }}
       >
         Register

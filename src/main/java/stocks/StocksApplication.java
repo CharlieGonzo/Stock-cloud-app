@@ -14,8 +14,7 @@ import stocks.service.UserService;
 @SpringBootApplication
 public class StocksApplication{
 
-	@Autowired
-	UserService users;
+
 	
 	public static void main(String[] args) {
 		SpringApplication.run(StocksApplication.class, args);

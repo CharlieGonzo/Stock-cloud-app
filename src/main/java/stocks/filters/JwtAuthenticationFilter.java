@@ -23,15 +23,18 @@ import stocks.service.UserService;
 
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	
-	@Autowired
 	private final JwtService jwtService;
 	
-	@Autowired
 	private final UserService userService;
+	
+	public JwtAuthenticationFilter(JwtService jwtService,UserService userService) {
+		
+		this.jwtService = jwtService;
+		this.userService = userService;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
