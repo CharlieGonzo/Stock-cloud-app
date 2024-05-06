@@ -1,6 +1,6 @@
 import { useState } from "react";
-import "../style/register.css";
 
+import "../style/start.css"
 import { Navigate, useNavigate } from "react-router";
 
 const Register = () => {
@@ -45,48 +45,20 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={signUp}>
-        <div className="login">
-          <h1>Register here</h1>
-
-          <div className="inputs">
-            <label htmlFor="username">Enter username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              name="username"
-              id="username"
-              placeholder="need to be over 6 characters long"
-            />
-
-            <label htmlFor="password">Enter password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              name="password"
-              id="password"
-              placeholder="need to be over 6 characters long"
-            />
-
-            <button type="submit">Register</button>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                navigate("/", { replace: true });
-              }}
-            >
-              return to login page
-            </button>
-          </div>
-        </div>
-      </form>
-      {inputerror && <h2>input is invalid</h2>}
-      {error && <h2>Server error.Try again later</h2>}
+    <div className="login-container">
+    <h2>Register</h2>
+    <form onSubmit={(e) => {signUp(e)}}>
+        <input type="text" name="username" placeholder="Username" required  onChange={(e) => setUsername(e.target.value)}/>
+        <input type="password" name="password" placeholder="Password" required  onChange={(e) => setPassword(e.target.value)}/>
+        <input type="submit" value="Register" />
+    </form>
+    <div className="register-link">
+         have an account? <a href="/">Login</a>
+         {error == true && <p>error with server</p>}
+        {inputerror == true && <p>Error with credentials please try again</p>}
     </div>
+   
+</div>
   );
 };
 

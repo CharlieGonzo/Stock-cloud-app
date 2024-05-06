@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../style/home.css";
+import "../style/start.css"
 import { Navigate, useNavigate } from "react-router";
 
 function Home() {
@@ -18,7 +18,8 @@ function Home() {
     localStorage.setItem("sessionExpiration", expirationTime.toString());
   }
 
-  const submit = async () => {
+  const submit = async (e) => {
+    e.preventDefault();
     const payload = {
       username: username,
       password: password,
@@ -44,40 +45,21 @@ function Home() {
         console.error(err);
       });
   };
-
+ 
   return (
-    <div className="login">
-      <h1>Stock-Cloud</h1>
-      <h1>please login in</h1>
-      <div className="inputs">
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          type="text"
-          name="password"
-          id="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button onClick={submit}>Sign In</button>
-      <p>don't have a account?</p>
-      <button
-        onClick={() => {
-          navigate("/Register", { replace: true });
-        }}
-      >
-        Register
-      </button>
-      {error && (
-        <h4 className="error">Wrong login credentials. Please try again</h4>
-      )}{" "}
+    <div className="login-container">
+    <h2>Login</h2>
+    <form onSubmit={e => {submit(e)}}>
+        <input type="text" name="username" placeholder="Username" required  onChange={(e) => setUsername(e.target.value)}/>
+        <input type="password" name="password" placeholder="Password" required  onChange={(e) => setPassword(e.target.value)}/>
+        <input type="submit" value="Login" />
+    </form>
+    <div className="register-link">
+        Don't have an account? <a href="/Register">Register</a>
+        {error == true && <p>Error with credentials please try again</p>}
     </div>
+   
+</div>
   );
 }
 

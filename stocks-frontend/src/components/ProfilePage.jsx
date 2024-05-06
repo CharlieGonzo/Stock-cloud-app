@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../style/home.css";
+
 import { useNavigate } from "react-router";
 
 function ProfilePage() {

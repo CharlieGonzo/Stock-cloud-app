@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import "../style/history.css";
+
 import { Navigate } from "react-router";
 import { useNavigate } from "react-router";
 
