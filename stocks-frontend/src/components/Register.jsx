@@ -53,7 +53,11 @@ const Register = () => {
         <input type="submit" value="Register" />
     </form>
     <div className="register-link">
-         have an account? <a href="/">Login</a>
+         have an account?   <a href="#" onClick={e => {
+          navigate("/", { replace: true }); 
+         }}>
+                login
+            </a>
          {error == true && <p>error with server</p>}
         {inputerror == true && <p>Error with credentials please try again</p>}
     </div>
