@@ -55,7 +55,11 @@ function Home() {
         <input type="submit" value="Login" />
     </form>
     <div className="register-link">
-        Don't have an account? <a href="/Register">Register</a>
+        Don't have an account?  <a href="#" onClick={e => {
+          navigate("/Register", { replace: true }); 
+         }}>
+                Register
+            </a>
         {error == true && <p>Error with credentials please try again</p>}
     </div>
    
