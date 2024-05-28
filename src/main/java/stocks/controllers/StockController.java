@@ -65,7 +65,7 @@ public class StockController{
 		}
 	}
 
-	private BufferedReader createUrlReader(String symbol){
+	private BufferedReader createUrlReader(String symbol) throws IOException {
 		URL oracle = null;
 		BufferedReader in = null;
 		try {
@@ -76,7 +76,15 @@ public class StockController{
 				oracle = new URL(getStockCsv(true,symbol));
 				in = new BufferedReader(new InputStreamReader(oracle.openStream()));
 			} catch (IOException ignored) {
-				return null;
+				try{
+				oracle = new URL("https://query1.finance.yahoo.com/v7/finance/download/" + symbol + "?period1=" + (this.getCurrentTime()-(86400*2))
+						+ "&period2=" + (this.getCurrentTime()-(86400*2)) + "&interval=1d&events=history&includeAdjustedClose=true");
+				in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+				}catch (Exception error){
+					oracle =  new URL("https://query1.finance.yahoo.com/v7/finance/download/" + symbol + "?period1=" + (this.getCurrentTime()-(86400*3))
+							+ "&period2=" + (this.getCurrentTime()-(86400*3)) + "&interval=1d&events=history&includeAdjustedClose=true");
+					in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+				}
 			}
 		}
 		return in;

@@ -80,7 +80,7 @@ public class User implements UserDetails{
 		totalMoney = invest + toSpend;
 	}
 
-	public double getTotal() throws IOException {
+	public double getTotal() {
 		return totalMoney;
 	}
 	

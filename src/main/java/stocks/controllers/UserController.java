@@ -112,6 +112,21 @@ public class UserController {
 
 	}
 
+	@PatchMapping("/deposit/{amount}")
+	@PreAuthorize("hasRole('User')")
+	public ResponseEntity<String> depositMoney(@PathVariable int amount,@RequestHeader("Authorization") String authHead){
+		User user = getUser(authHead);
+
+		if(user == null) return ResponseEntity.badRequest().body("user does not exist");
+
+		user.setTotalMoney(user.getTotal() + amount);
+		userService.saveUser(user);
+		return ResponseEntity.ok("");
+
+	}
+
+
+
 
 	/**
 	 * allows users to sell stocks with up to date pricing
